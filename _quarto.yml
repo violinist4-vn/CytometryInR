@@ -12,7 +12,7 @@ website:
   announcement: 
     icon: info-circle
     dismissable: true
-    content: "Thanks for investigating :)"
+    content: "Course will start week of February 1st. Workstation setup tutorials are now available."
     type: info
     position: below-navbar 
   page-navigation: true 
@@ -21,8 +21,8 @@ website:
     logo: images/hex.svg
     background: white
     left:
-      - href: index.qmd
-        text: Home
+      - text: "About"
+        href: index.qmd
       - text: "Schedule"
         href: Schedule.qmd
       - text: "Course"
@@ -35,11 +35,7 @@ website:
     style: floating
     collapse-level: 1
     contents:
-    - section: "Introduction"
-      contents:
-      - text: "Motivations"
-        href: course/00_Motivations/index.qmd
-    - section: "Getting Set Up"
+    - section: "Getting Started"
       contents:
       - text: "00 - GitHub"
         href: course/00_GitHub/index.qmd
@@ -51,84 +47,18 @@ website:
         href: course/00_Git/index.qmd
       - text: "00 - Quarto"
         href: course/00_Quarto/index.qmd
-      - text: "00 - Homeworks"
+      - text: "00 - Getting Help"
         href: course/00_Homeworks/index.qmd
-      - text: "00 - AI"
-        href: course/00_AI_Policy/index.qmd
       - text: "00 - Floreada"
         href: course/00_Floreada/index.qmd
     - section: "Intro to R"
-      href: course/01_InstallingRPackages/index.qmd
-      contents:
-      - text: "01 - Installing R Packages"
-        href: course/01_InstallingRPackages/index.qmd
-      - text: "02 - File Paths"
-        href: course/02_FilePaths/index.qmd
-      - text: "03 - Inside a .FCS file"
-        href: course/03_InsideFCSFile/index.qmd
-      - text: "04 - Intro to Tidyverse"
-        href: course/04_IntroToTidyverse/index.qmd
-      - text: "05 - Gating Sets"
-        href: course/05_GatingSets/index.qmd
-      - text: "06 - Visualizing With ggplot2"
-        href: course/06_Visualizing/index.qmd
-      - text: "07 - Transformations and Compensation"
-        href: course/07_Transformations/index.qmd
-      - text: "08 - Ways to Gate"
-        href: course/08_WaysToGate/index.qmd        
-      - text: "09 - It's Raining Functions!"
-        href: course/09_Functions/index.qmd
+      href: Schedule.qmd
     - section: "Cytometry Core"
-      href: course/10_Downsampling/index.qmd
-      contents:
-      - text: "10 - Downsampling and Concatenation"
-        href: course/10_Downsampling/index.qmd
-      - text: "11 - Data for Statistics"
-        href: course/11_DataForStats/index.qmd
-      - text: "12 - Spectral Signatures"
-        href: course/12_SpectralSignatures/index.qmd
-      - text: "13 - Spectral Similarities"
-        href: course/13_SpectralSimilarities/index.qmd
-      - text: "14 - Unmixing in R"
-        href: course/14_Unmixing/index.qmd
-      - text: "15 - Data Cleaning"
-        href: course/15_DataCleaning/index.qmd
-      - text: "16 - Clustering"
-        href: course/16_Clustering/index.qmd
-      - text: "17 - Normalization"
-        href: course/17_Normalization/index.qmd
-      - text: "18 - Dimensionality Visualization"
-        href: course/18_DimensionalityVisualization/index.qmd
-      - text: "19 - Annotation"
-        href: course/19_Annotation/index.qmd
+      href: Schedule.qmd
     - section: "Beyond the Sandbox"
-      href: course/20_GitHubDiving/index.qmd
-      contents: 
-      - text: "The Art of GitHub Diving"
-        href: course/20_GitHubDiving/index.qmd
-      - text: "XML files all the way down"
-        href: course/21_XMLFiles/index.qmd
-      - text: "Utilizing Bioconductor Packages"
-        href: course/22_Bioconductor/index.qmd
-      - text: "Building your First R package"
-        href: course/23_FirstRPackage/index.qmd
-      - text: "Reproducibility and Replicability"
-        href: course/24_Reproducibility/index.qmd
-      - text: "Validating Algorithmic Tools"
-        href: course/25_ValidatingAlgorithms/index.qmd
-      - text: "Quarto Websites"
-        href: course/26_QuartoWebsites/index.qmd
-      - text: "Open Source Licenses"
-        href: course/27_OpenSource/index.qmd
-      - text: "Databases and Repositories"
-        href: course/28_Databases/index.qmd
-      - text: "Assembling Web Data"
-        href: course/29_WebData/index.qmd
+      href: Schedule.qmd
     - section: "The World is your Oyster"
-      href: course/30_FutureDirections/index.qmd
-      contents:         
-      - text: "Future Directions"
-        href: course/30_FutureDirections/index.qmd
+      href: Schedule.qmd
   page-footer: 
    left: Made with [Quarto](https://quarto.org/)
    right: |

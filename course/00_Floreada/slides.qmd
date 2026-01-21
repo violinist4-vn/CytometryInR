@@ -1,0 +1,444 @@
+---
+title: "Using Floreada"
+author: "David Rach"
+date: 01-21-2026
+format:
+  revealjs:
+    theme: default
+    slide-number: true
+    incremental: true
+page-layout: full
+---
+
+![](/images/WebsiteBanner.png)
+
+::: {style="text-align: right;"}
+[![AGPL-3.0](https://img.shields.io/badge/license-AGPLv3-blue)](https://www.gnu.org/licenses/agpl-3.0.en.html) [![CC BY-SA 4.0](https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg)](http://creativecommons.org/licenses/by-sa/4.0/)
+:::
+
+
+# Background
+
+::: {.notes}
+As a "Cytometry in R" course, we will primarily be working in R. However, within our daily workflows and projects here at our flow cytometry core, we often use various flow cytometry softwares (like [FlowJo](https://flowjo.com/flowjo10/download) or [FCS Express](https://denovosoftware.com/)) for various tasks. Fortunately, R packages like [CytoML](https://www.bioconductor.org/packages/release/bioc/html/CytoML.html) can allow us to import our manually drawn gates from existing FlowJo workspaces so that we can work with them in R.
+
+For this course, we are adamant about staying neutral in regards to both commercial software or instrument vendors as much as possible. If they have worked with the open-source community to make their files readable and accessible via R, we will showcase how to integrate those tools into your own workflows. At the same time, this being a [**free**]{.underline} course, it doesn't make sense to turn around and ask you to go and either free trial or buy an expensive software license just to see how a particular free R package works.
+
+Fortunately, for showing how to use this [CytoML](https://www.bioconductor.org/packages/release/bioc/html/CytoML.html) functionality, we can use [Floreada.io](https://floreada.io/). It is a simple (but free) web-based analysis platform that can be used to draw manual gates for your .fcs files of interest. These can then be saved as Floreada workspaces for later use. We typically recommend it to users from labs that do flow experiments infrequently. Fortunately thanks to the hard work of its [developers](https://floreada.io/about), it can also save the gated files as [FlowJo](https://flowjo.com/flowjo10/download) v10 .wsp files, which with a small workaround become usable within the [CytoML](https://www.bioconductor.org/packages/release/bioc/html/CytoML.html) pipeline.
+
+To facilitate this, we will provide a small walk-through of how to use it for those who want to create a .wsp with their own .fcs files for [Week 5](https://umgccfcss.github.io/CytometryInR/Schedule#gating-sets).
+:::
+
+# Walk-through
+
+## Floreada
+
+### Loading Dataset
+
+::: {.notes}
+First, open your web browser and navigate to the [website](https://floreada.io/) 
+
+Click on Start to proceed to the next page.
+:::
+
+![](images/01_LandingPage.png)
+
+<br>
+
+---
+
+![](images/02_InitialPage.png)
+
+
+<br>
+
+---
+
+::: {.notes}
+Once that is done, select the File tab on the upper navigation bar. Then click on Open File(s).
+:::
+
+![](images/03_OpenFiles.png){fig-align="left"}
+
+<br>
+
+---
+
+::: {.notes}
+From there, select your .fcs files of interest, and click Open.
+:::
+
+![](images/04_SelectFCSFiles.png)
+
+<br>
+
+---
+
+::: {.notes}
+The .fcs files will now load in, and you should see a view similar to the one below. On the left side-bar, you have your gating options (Rectangle, Polygon, Range, Elipse, Quad, etc). Next to these on the right you have the FCS files that are loaded into the workspace. Then on the right, you have the visual display for your selected specimen.
+:::
+
+![](images/05_InitialFiles.png)
+
+<br>
+
+---
+
+### Switching Axis Markers
+
+::: {.notes}
+If you left click on the axis name (SSC-H or FSC-H in this case), you will be able to select other markers by which to gate your specimen. For the provided example, we were using a raw spectral flow cytometry .fcs file, so the names of the detectors are present.
+:::
+
+![](images/06_LeftClick.png)
+
+<br>
+
+---
+
+::: {.notes}
+For now, I plan to start off by gating for singlets. I switch the y-axis to FSC-H, and then proceed to switch the x-axis to FSC-A.
+:::
+
+![](images/07_LeftClickXaxis.png)
+
+<br>
+
+---
+
+### Creating Gates
+
+::: {.notes}
+With this done, I can now select the Poly gate tab on the upper left.
+:::
+
+![](images/08_PolygonGateSelect.png)
+
+<br>
+
+---
+
+::: {.notes}
+Then manually click on the locations on the plot to add the individual gate nodes.
+:::
+
+![](images/08_PolygonGateStart.png)
+
+<br>
+
+---
+
+::: {.notes}
+To complete the gate, I click back to the original node point. At this point, the popup will allow you to name the gate.
+:::
+
+![](images/08_PolygonGateCreate.png)
+
+<br>
+
+---
+
+::: {.notes}
+To adjust the polygon gate, you can click on a node and drag it to expand or contract in a particular direction
+:::
+
+![](images/08_PolygonGateNode.png)
+
+<br>
+
+---
+
+::: {.notes}
+To move the entire gate, first click on a node to select the gate, then click in the center of the gate to adjust its location.
+:::
+
+![](images/08_PolygonGateCenter.png)
+
+<br>
+
+---
+
+
+### Additional Gates
+
+::: {.notes}
+Unfortunately for those with the force-of-habit from using other softwares, double-clicking within the gate doesn't do anything. To continue gating on the selected cells, you will need to click on the newly created gate name on the left. This will result in visualizing the isolated cells.
+:::
+
+![](images/09_SecondLanding.png)
+
+<br>
+
+---
+
+::: {.notes}
+Once this is done, you can repeat the previous steps to change the axis markers and create a second gate. For this example, we went with a "Cells" gate to exclude debris from this particular sample.
+:::
+
+![](images/09_SecondGate.png)
+
+<br>
+
+---
+
+::: {.notes}
+Having created the "Cells" gate, we will be switching gating based on FSC and SSC to using the detector parameters.
+
+The samples in this example were acquired to derive the cell counts and concentration of various cell populations within cryopreserved cord and peripheral blood mononuclear cells (CBMC and PBMC) specimens after thawing.
+
+They were stained with CD19 BV421, CD45 PE, and CD14 APC on a [5-Laser Cytek Aurora](https://spectrum.cytekbio.com/), before unmixing, this would correspond respectively to V1, YG1/B4, R1/YG4 peaks respectively.
+:::
+
+<br>
+
+---
+
+### Scaling/Transformation
+
+::: {.notes}
+When we switch the axis, we can see that the scaling/transformation is not ideal, as the staining and not-staining populations are scrunched up together in the center of the plot.
+:::
+
+![](images/10_Untransformed.png)
+
+<br>
+
+---
+
+::: {.notes}
+To change the scaling/transformation, we need to click directly on the axis.
+:::
+
+![](images/10_ClickGrid.png)
+
+<br>
+
+---
+
+::: {.notes}
+From there, when we click on the drop-down, we see the various transformation options. We will select [Logicle](https://pubmed.ncbi.nlm.nih.gov/16604519/), given we are working with spectral flow cytometry files.
+:::
+
+![](images/10_SelectLogicle.png)
+
+<br>
+
+---
+
+::: {.notes}
+This y-axis values are subsequently visualized with the logicle transformation applied, increasing our resolution between the positive and negative population.
+:::
+
+![](images/10_LogicleY.png)
+
+<br>
+
+---
+
+::: {.notes}
+We can then repeat this for the x-axis, adjusting the fine-tune options for the scaling as needed.
+:::
+
+![](images/10_DoubleLogicleAxis.png)
+
+<br>
+
+---
+
+### Navigating Gating Hierarchy
+
+::: {.notes}
+With this done, let's first draw a rectangle gate for the CD45+ (B4-A) cells.
+:::
+
+![](images/10_CD45Gate.png)
+
+<br>
+
+---
+
+::: {.notes}
+And then selecting that population by clicking on the gate name, let's proceed and gate the CD19+ cells (V2-A).
+:::
+
+![](images/10_CD19Gate.png)
+
+<br>
+
+---
+
+::: {.notes}
+As you can see, we now have the various gates present in the gating hierarchy for the respective .fcs file. To return to a previous gated population, we would click on the parent population above it.
+:::
+
+![](images/11_ReturnToPrevious.png)
+
+<br>
+
+---
+
+::: {.notes}
+We can subsequently add an additional gate at this gating level for the likely debris population (the threshold setting was suboptimal for this experimental run).
+:::
+
+![](images/11_AdditionalGates.png)
+
+<br>
+
+---
+
+### Copying Gates
+
+::: {.notes}
+This was the process for gating for a single specimen. To copy gates over to the other specimens, we have two options. First, holding down your Ctrl (or equivalent) button, you can click on the individual gate names.
+:::
+
+![](images/11_ControlHighlight.png)
+
+<br>
+
+---
+
+::: {.notes}
+From there, you can drag them down to the next specimen and apply them.
+:::
+
+![](images/11_ApplyToNext.png)
+
+<br>
+
+---
+
+::: {.notes}
+Alternatively, you can drag down the highlighted gated to the Pipelines Tab, and apply to All Files. This will result in the gates being copied to all specimens in the experiment.
+:::
+
+![](images/11_ApplyAllViaPipelines.png)
+
+<br>
+
+---
+
+![](images/13_PipelineAdjustAll.png)
+
+
+<br>
+
+---
+
+::: {.notes}
+Adjustments within Pipelines will carry over to all other respective unmodified specimens that share it’s gates.
+:::
+
+![](images/13_PipelineAdjustCD19.png)
+
+<br>
+
+---
+
+::: {.notes}
+Once this is done, I recommend cycling through the gates for each specimen, just to ensure that the gates were positioned correctly before saving the workspace.
+:::
+
+![](images/12_ClickAdjust.png)
+
+<br>
+
+---
+
+### Saving Workspace
+
+::: {.notes}
+With everyone now "correctly" gated, we can proceed to save the workspace so that we can reopen it later from another browser.
+
+To do this we open the File tab from the upper navigation bar, and select Save Workspace.
+:::
+
+![](images/14_SaveWorkspace.png)
+
+<br>
+
+---
+
+::: {.notes}
+From there we have a couple options, for now let's select Floreada Workspace. Where it is saved at will depend on your individual browser settings, so watch for a popup.
+:::
+
+![](images/14_FloreadaWorkspace.png)
+
+<br>
+
+---
+
+::: {.notes}
+Alternatively (and crucially for the CytoML pipeline) we can also choose to save it as a FlowJo v10 .wsp file.
+:::
+
+![](images/14_FlowJoWorkspace.png)
+
+<br>
+
+---
+
+::: {.notes}
+In both cases, you will end up with Workspace files that can be used later to access your created gates
+:::
+
+![](images/WorkspaceFiles.png)
+
+<br>
+
+---
+
+### Reopening Workspace
+
+::: {.notes}
+To reopen the Floreada workspace within the browser, reopen the website, and select the Open File(s) option.
+:::
+
+![](images/15_Reopening.png)
+
+<br>
+
+---
+
+::: {.notes}
+From there, select both the Floreada Workspace file as well as the .fcs files
+:::
+
+![](images/15_ReopeningSelectAll.png)
+
+<br>
+
+---
+
+::: {.notes}
+At which point you will now be back to the point you last saved at.
+:::
+
+![](images/15_ReopenedWorkspace.png)
+
+<br>
+
+---
+
+## CytoML
+
+::: {.notes}
+Due to a unknown formatting bug, the Floreada produced FlowJo v10 .wsp is not directly accessible by CytoML at the time of this course. However, the issue is resolved as soon as the file is opened the first time within FlowJo v10, regardless of whether you have a log in or not. Strange? Yes, but we will take the workaround.
+
+So, for anyone on Windows or MacOS, download [FlowJo v10](https://www.flowjo.com/flowjo10/overview). Once installed, open the software, and close the login popups. Once there, open the Floreada created FlowJo.wsp file. Since you haven't logged in, it won't show any events. But it will correct the formatting bug. Close the software, and return to R. Your Floreada sourced .WSP file should now be readable by CytoML. 
+
+Odd? For sure. Fixable? Likely, I will set a reminder to work with the Floreada and CytoML devs to see if we can cut out the need for this workaround. 
+:::
+
+# Wrap-up
+
+
+# Additional Resources
+
+[Floreada Documentation](https://floreada.io/docs/)
+
+::: {style="text-align: right;"}
+[![AGPL-3.0](https://www.gnu.org/graphics/agplv3-with-text-162x68.png)](https://www.gnu.org/licenses/agpl-3.0.en.html) [![CC BY-SA 4.0](https://licensebuttons.net/l/by-sa/4.0/88x31.png)](http://creativecommons.org/licenses/by-sa/4.0/)
+:::

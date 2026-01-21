@@ -1,0 +1,2200 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-html/tabby.min.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.7.32">
+
+  <meta name="author" content="David Rach">
+  <meta name="dcterms.date" content="2026-01-21">
+  <title>Cytometry in R – Version Control with Git</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="../../site_libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="../../site_libs/revealjs/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+  </style>
+  <link rel="stylesheet" href="../../site_libs/revealjs/dist/theme/quarto-f563837468303362081e247dddd440d0.css">
+  <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-LZ35J3XE4D"></script>
+
+  <script type="text/javascript">
+
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
+  </script>
+  <link href="../../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="../../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="../../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="../../site_libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" class="quarto-title-block center">
+  <h1 class="title">Version Control with Git</h1>
+
+<div class="quarto-title-authors">
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+David Rach 
+</div>
+</div>
+</div>
+
+  <p class="date">2026-01-21</p>
+</section>
+<section class="slide level2">
+
+<p><img data-src="../../images/WebsiteBanner.png"></p>
+<div style="text-align: right;">
+<p><a href="https://www.gnu.org/licenses/agpl-3.0.en.html"><img data-src="https://img.shields.io/badge/license-AGPLv3-blue.png" alt="AGPL-3.0"></a> <a href="http://creativecommons.org/licenses/by-sa/4.0/"><img data-src="https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg" alt="CC BY-SA 4.0"></a></p>
+</div>
+</section>
+<section id="background" class="title-slide slide level1 center">
+<h1>Background</h1>
+<aside class="notes">
+<p>Now that we have created a <a href="../../course/00_GitHub/index.html">GitHub account</a>, installed the required <a href="../../course/00_WorkstationSetup/index.html">software</a> and investigated <a href="../../course/00_Positron/index.html">Positron’s</a> layout, we will start learning about version control software.</p>
+<p>When working with code, it is important to stay organized. Ideally, everything needed for your code to successfully run should be present and accounted for within the local environment. Likewise, if you make changes, and your code stops working (no longer returning the expected output, ie. breaks), it would be most useful to have a track record of what has changed since your last working version in order to fix the issue. For beginners, this is often a typo in a function name or a misplaced comma somewhere within your document.</p>
+<p>For this course, we will be using the version control software <a href="https://git-scm.com/">Git</a>. It is widely used by software developers and bioinformaticians worldwide, and is a very useful tool to have in your coding toolbox.</p>
+<p>Git works locally within your individual project folders to track changes to the documents within, allowing to save the current state of the folder along the way (ie. a commit). This allows you to compare to previous versions (other commits) and return the changes that have occured to the tracked files.</p>
+<p>As we saw during the <a href="../../course/00_WorkstationSetup/index.html">workstation setup</a> section, when you have a linked GitHub account, you can backup folders as repositories online. By leveraging the ability to send and receive changes, this allows you to modify a file on one computer,</p>
+<p>Individual repositories can be linked to a GitHub account, which permits them to be backed up online. Within our workflow, this allows to modify on one computer, back up (ie. push) the changes to GitHub, and then later on a different workstation, retrieve (ie. pull) these new changes and continue working.</p>
+<p>In this walk-through, we will set up a New Project Folder from a template, create a few folders and files, and work through how to use the main set of Git commands needed for this course.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+
+<section>
+<section id="getting-started" class="title-slide slide level1 center">
+<h1>Getting Started</h1>
+<aside class="notes">
+<p>For this walkthrough, we are going to create a brand new project folder. To do this, we can open the folder tab on the upper right.</p>
+<p>From here we can see we have two options, create a “New Folder from a Template”, and create a “New Folder from Git” (which was the option we used during <a href="../../course/00_WorkstationSetup/index.html">workstation setup</a> to bring in the forked CytometryInR and README repository folders locally).</p>
+<p>We will go ahead and select “New Folder from a Template” for this example.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/1.png" class="r-stretch"><p><br></p>
+</section>
+<section id="new-folder-from-template" class="slide level2">
+<h2>New Folder from Template</h2>
+<aside class="notes">
+<p>Since Positron can use multiple programming languages, when we select “New Folder from Template” we will be asked what kind of folder template we want to use. Since we are working in R, we will select the “R Project” option.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/2.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<aside class="notes">
+<p>We will next be asked to name the new project folder and a storage location.</p>
+<p>One thing I would like to remind everyone who is just starting to code is that it is best to avoid using <a href="https://en.wikipedia.org/wiki/Regular_expression">special characters</a> (ex. @ $ # ^ ! ; : ,) in any folder or file name. This is because when coding, these can be misinterpreted as commands.</p>
+<p>While spaces are generally okay, it is often to best stick to to stick to hyphens (-), underscores (_). We will explore naming conventions in more depth at a later time.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="https://pbs.twimg.com/media/FxVpCpqaIAE_iqU?format=jpg&amp;name=small.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<aside class="notes">
+<p>Another useful thing to know when getting started with version control, it is best to save your files within your local computer, avoid using OneDrive or other cloud storage options for the time reason. The reason behind is that permissions to write/save to the cloud locations can sometimes be quite finicky, and some autosave/indexing behaviors can cause issues. akes things easier to save or modify without running into permission issues. For most of our course examples, we will be saving our Project Folders under the Documents Folder.</p>
+<p>Having named our new Project Folder, and designated a storage location, go ahead and check the Initialize Git Repository option. This will indicate to version control to monitor content and changes to files within this folder.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/3.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<aside class="notes">
+<p>The next setup screen will verify which version of R you wish to use. Since we are just getting started, your most recent version of R (usually system) should work. We will also leave the “renv” (reproducible environment setup) option unchecked for the time being (we will revisit the concept later in the course).</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/4.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<aside class="notes">
+<p>And if all goes well, we should see the “New Folder Created” popup.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/5.png" class="r-stretch"><p><br></p>
+</section>
+<section id="creating-subfolders" class="slide level2">
+<h2>Creating SubFolders</h2>
+<aside class="notes">
+<p>Once your new project folder has opened, you should be seeing the main layout elements that we briefly covered in the <a href="../../course/00_Positron/index.html">Positron</a> walk-through.</p>
+<p>For this section, we will primarily be focused on what is happening within the primary side bar on the left, where changes to the individual files within the folder since the last save/commit will be reflected by colored text.</p>
+<p>For my own projects, there are some elements of organization that I go ahead and add for each new folder. These include both a data and an images subfolders to help keep things a little more organized.</p>
+<p>To create these folders, we would click on the respective add folder (+) button on the side bar. Files and Folders can be clicked and dragged within the primary side bar to move things to new folder locations.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/6.png" class="r-stretch"><p><br></p>
+</section>
+<section id="creating-files" class="slide level2">
+<h2>Creating Files</h2>
+<aside class="notes">
+<p>In context of this course, we will primarily be working with two types of files when coding:</p>
+<ul>
+<li><p>R Scripts: These files end in .R. These contain only code (with occasional # comment line). These are often used for self-contained code that once we get them working we rarely need to modify.</p></li>
+<li><p>Quarto Markdowns: These files end in .qmd. They contain a .yaml header, followed by a mix of regular written text (often explanations or other documentation), and sections (ie. chunks) that contain code. These are used when we are still getting the code to work, when we need to modify inputs frequently, or simply when we need to document what and why we are doing something to make life easier for our future-self two months from now.</p></li>
+</ul>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+<p><br></p>
+</section>
+<section class="slide level2">
+
+<aside class="notes">
+<p>In this example, I will go ahead and select the new file icon</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/7.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<aside class="notes">
+<p>Thenn I will name the file, and designate it as a Quarto Markdown file by adding the .qmd at the end of the name to denote the file type.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/8.png" class="r-stretch"><p><br></p>
+</section>
+<section id="qmd-files" class="slide level2">
+<h2>QMD Files</h2>
+<aside class="notes">
+<p>Once this is done, we can now see we have a new .qmd file (“Example.qmd” in this case).</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+<h3 id="yaml">YAML</h3>
+<aside class="notes">
+<p>As previously mentioned, the start of a <a href="https://quarto.org/docs/authoring/markdown-basics.html#overview">Quarto Markdown</a> file containg a <a href="https://quarto.org/docs/authoring/front-matter.html">YAML</a> code chunk that is used to set formatting choices (we will explore this in-depth during the <a href="../../course/00_Quarto/index.html">next section</a>)</p>
+<p>What designates the location of the YAML block are three hyphens at the start, and three hyphens at the end. For this example, we will also provide a “title:” and “format:” field for the time being (see additional options <a href="https://quarto.org/docs/authoring/front-matter.html">here</a>).</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/9.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<h3 id="text">Text</h3>
+<aside class="notes">
+<p>With a basic YAML formatting block now in place, we can build out other elements of our Quarto Markdown document. Unless otherwise specified, everything else in the document is assumed to be text, so I will go ahead and provide an initial text description of what I am trying to do.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/10.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<h3 id="code-chunks">Code-Chunks</h3>
+<aside class="notes">
+<p>Having provided some initial text for documentation, we can then add code-block chunks to start writing some code.</p>
+<p>The easiest way to do do this is to click the respective option on the upper-right of the Editor screen. Since Positron can handle multiple programming languages, so the chunk is inserted, we will need to select the language we use to be used within the code chunk (R in this case).</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/11.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<aside class="notes">
+<p>You will notice, that the inserted code block starts off with three backticks (`) and then “{r}”. The end of the code block is denoted by an additional three backticks.</p>
+<p>We can also add new code blocks by simply typing these elements into the location we want to place a code chunk (as long as we are careful to add 3 backticks also at the end).</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/12.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+
+<img data-src="images/13.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<h3 id="running-code">Running Code</h3>
+<aside class="notes">
+<p>Now that we have two code-chunks written, we can write lines of code within them. For this example, I will use two beginner friendly functions, print(“Hello”), which will print the contents contained between the ” ” to the console, and getwd() which will return the location of the folder you are working within (ie. the working directory).</p>
+<p>To run/execute these lines of code, we have a couple options. We can click on the Run Cell option that appears on the upper-left side of the code chunk. Additionally, it has a companion option that will run all code chunks above it.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/14.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<aside class="notes">
+<p>When a code block is successfully run, you will see within the console (lower bottom of the screen) the line of code be run, with any returned outputs appear directly after.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/15.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<aside class="notes">
+<p>An alternative to clicking the Run Cell button is to click on the line of code you are interested in running, then press (Ctrl + Enter)/(Command + Enter). This will execute the line of code that you have clicked on. This can be useful in scenarios where you want to run a specific line, and not the entire code-chunk.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/16.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<aside class="notes">
+<p>Using this approach, you can see the location (ie. file path) of the current working directory was returned to the Console.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/17.png" class="r-stretch"><p><br></p>
+</section>
+<section id="local-version-control" class="slide level2">
+<h2>Local Version Control</h2>
+<aside class="notes">
+<p>Having introduced the main elements of a <a href="https://quarto.org/docs/authoring/markdown-basics.html#overview">Quarto Markdown</a> file, let’s turn our attention to the tab within the editor showing our newly created .qmd file.</p>
+<p>We can see there is a solid circle next to the file name, and it is appearing as green. The circle denotes unsaved changes, which we can correct by clicking on the Save Button to save the changes to our file.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/18.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<h3 id="untracked">Untracked</h3>
+<aside class="notes">
+<p>If we turn our attention to the left primary sidebar, we can see that within our GitPractie folder there are three files, our Example.qmd, and the default README.md and .gitignore files. These all show up in green text with U’s to the right of the file names.</p>
+<p>This denotes that the version control tracking software Git is currently considering them as “Untracked” files. While saving the document via the Save button means we will still have our changes when we reopen Positron, we won’t have any history of changes that we can use to revert back to the way all the files appeared at this exact point in time should something go wrong.</p>
+<p>We will next go the address bar on the very far left, and select the Git tab.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/19.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<aside class="notes">
+<p>On the Git tab, we can see that each of the three files are shown underneath a “Changes” drop-down. This contains the files that have undergone changes since the last commit. In our case, since we haven’t updated the save-state yet, this last commit would be the initial creation of the project folder.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/20.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<aside class="notes">
+<p>To have version control track these individual files going forward, we can do so in two separate ways. We can add them individually by clicking the + symbol next to the individual names.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/21.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<h3 id="staged">Staged</h3>
+<aside class="notes">
+<p>This will result in the files being moved to the “Staged” dropdown. This denotes files being tracked with the intention of being recorded as the next save-state or waypoint (ie. a commit).</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/22.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<h3 id="commit">Commit</h3>
+<aside class="notes">
+<p>To create a new commit (save-state or waypoint), once we have the files we want to track staged, we will write a commit message, and then press commit.</p>
+<p>A commit message is a brief description of the changes that have occurred to the files between this commit and the previous one. Make this short description informative enough that if you need to revert back in the future, you can quickly identify the commit you need to fall back to (more about this later).</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/23.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<aside class="notes">
+<p>If this your first time using version control, you will likely encounter the following pop-up asking that you provide a user.name and user.email. This is used to designate the author of the changes.If you get this popup, go ahead and select “Open Git Log”</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/24.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<h3 id="username-and-useremail">UserName and UserEmail</h3>
+<aside class="notes">
+<p>The Output tab at the bottom of the screen will open, showing the messages that led to the popup.</p>
+<p>The important part to note is the commands that will be needed to provide your user name and email to the computer for authoring the commit. Typically, your email will be the same one you used for your GitHub account.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/25.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<aside class="notes">
+<p>From the displayed message, go ahead and copy</p>
+<p>“git config –global user.email”you@example.com””</p>
+<p>Then click on the adjacent terminal tab. You will paste the command in, but do not hit enter just yet.</p>
+<p>Windows users, please note, depending on your settings, if trying to paste from the keyboard into the terminal, you may need to press “Ctrl + Shift + V” instead of the usual “Ctrl + V”.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/26.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<aside class="notes">
+<p>With the command now pasted (or typed), use your keyboard arrows to navigate to the email portion, and replace the generic email with your email address used for your GitHub account.</p>
+<p>Make sure that the quotation marks (“) around the email address remain present, as they help the computer identify where your email address starts and ends. Once satisfied that your email address is correct, press enter.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/27.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<aside class="notes">
+<p>Next up, repeat the process, this time copying over the command needed to set your user name to the terminal. Repeat the editing process to provide your name between the “” marks. Then press enter.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/28.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+
+<img data-src="images/29.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<h3 id="first-commit">First Commit</h3>
+<aside class="notes">
+<p>Now that your user.name and email address have been provided, Git should be able to provide an author to the commit message. Reattempt to press commit button.</p>
+<p>If this is successful, you will see your initial commit appear on the bottom half of the left primary side bar, under the Graph dropdown. Congrats! Your files are now being tracked by version control.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/30.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<aside class="notes">
+<p>If you hover with your mouse arrow just over the commit, you can see the longer commit message and additional details appear.</p>
+<p>If you click on the commit tab, a new display will open in the editor, displaying the changes that occured in that commit compared to the previous one. In this case, since we added everything since the previous commit, nothing appears on the left side, while the entire documents contents appear highlighted in green on the right.</p>
+<p>Green highlighting is used to show additions, while red highlighting is used to show deletions.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/31.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<aside class="notes">
+<p>Having completed this initial commit, for this example, let’s imitate a typical workflow and make some additional changes to the file before we make a second commit. Within text portions of the .qmd file, use of # denotes a section header in markdown, so let’s add a header for Introduction and click save.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/32.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<h3 id="modified">Modified</h3>
+<aside class="notes">
+<p>Within the left primary sidebar, we can see that the Git tracking has updated. Examples.qmd is visible once again. However, becuase it is now a tracked file, instead of showing up with the “U/Untracked” green highlight, it now appears as a brownish-red with a “M/Modified”.</p>
+<p>Let’s make an additional change to the .qmd file by adding another section (# Setup) and a code block with a commented out line (denoted by the # at the line start), before pressing Save.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/33.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<aside class="notes">
+<p>If we were now to click on the Example.qmd file in the left primary sidebar, it will open the same kind of tracking display we saw previously. This time, we can see changes since our last commit. These appear as the green highlights along the scroll-bar, corresponding to the # Introduction and # Setup headers that we have added in since the last commit.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/34.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<aside class="notes">
+<p>For a larger document, we can scroll down to see the various highlighted regions.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/35.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<aside class="notes">
+<p>We could now repeat the steps showed above, staging the file, writing a commit message, and commiting again by clicking on the designated buttons.</p>
+<p>An important question is how often should we commit, vs.&nbsp;just hit save? Well… it depends :D Let’s think about this in context of a video game. If you made commits at regular intervals throughout the day (or more frequently when doing something particularly risky), you are more likely to be close enough to a particular commit (waypoint/save-state) that you can quickly revert back to without loosing any progress. Alternatively, if your last commit was last week, you will not have any intermediate versions to fall back to.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+<h3 id="commit-via-terminal">Commit via Terminal</h3>
+<aside class="notes">
+<p>Having demonstrated how to commit changes to Git via the left primary side-bar, for this second commit, let’s do it the alternate way via the terminal (tab on the panel at the bottom of your screen).</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="https://positron.posit.co/images/user-interface-for-rstudio-migration.jpeg" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<aside class="notes">
+<p>After clicking on the terminal tab, click on blinking command line.</p>
+<p>The command to stage a file is “git add”, followed by the name of the file you want to stage.</p>
+<p>In this case, you would enter “git add Example.qmd” and press Enter.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/36.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<aside class="notes">
+<p>You will see after pressing enter a new blank terminal line appear. If you glance at the left-sidebar, you can see that Example.qmd now appears under the Staged Changes dropdown.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/37.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<aside class="notes">
+<p>Next up, let’s write the git commit via the terminal. In this case, the command would be “git commit -m” (-m denoting message). The commit text is then surrounded by “” marks.</p>
+<p>For example: “git commit -m”Added section headers to my QMD file””</p>
+<p>Press enter to save the commit.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/38.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<aside class="notes">
+<p>And you should see your second commit now appear in the left primary sidebar underneath the graphs dropdown.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/39.png" class="r-stretch"><p><br></p>
+</section>
+<section id="remote-version-control" class="slide level2">
+<h2>Remote Version Control</h2>
+<h3 id="copying-project-folder-to-github">Copying Project Folder to GitHub</h3>
+<aside class="notes">
+<p>While having local version control in place is helpful when you need to revert back after encountering issues, where Git shines is the ability to pass your changes to your online GitHub repository.</p>
+<p>Not only does this allow you to switch between computers, but should something disastrous happen to your main computer, you still have all your hard work backed up and readily assessible.</p>
+<p>For this subsection, first, double check that Positron is still connected to your GitHub account by checking the user tab on the bottom-left. If not, repeat the <a href="../../course/00_WorkstationSetup/Windows.html#connecting-github-and-positron">connection setup</a>.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/40.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<aside class="notes">
+<p>Since our project was created using the “New Folder from Template” option, it currently only exist locally. What we want to do next is to copy it to our GitHub account, creating a new repository in the process.</p>
+<p>To do this, we will first need to install the <code>usethis</code> R package. Within your console, you would run the following line of code:</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+<p><br></p>
+</section>
+<section class="slide level2">
+
+<aside class="notes">
+<p>Depending on what R packages you already have installed on your computer, you may get a prompt asking if you want to update/install additional dependencies. Go ahead and type the number corresponding to Update All, and press enter.</p>
+<p>The package and all it’s dependencies should then install. If an error message appears, read through it, and follow provided instructions. Go to <a href="https://github.com/UMGCCCFCSR/CytometryInR/discussions">Discussions</a> if need help.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+<p><br></p>
+</section>
+<section class="slide level2">
+
+<aside class="notes">
+<p>Once the <code>usethis</code> package is installed, we need to activate it within R by calling it with the library command. This makes all the tools (ie. functions) within an R package available for use within Positron.</p>
+<p>In your console, you would type:</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/46.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<aside class="notes">
+<p>With library called, you now have access to the functions (tools) within the <code>usethis</code> R package. One of these is the <code>use_github()</code> function.</p>
+<p>In Positron, if you hover over a function, it will pull up the associated help file which will provide you information about the arguments the function expects to receive, and what they do.</p>
+<p>For <code>use_github()</code>, the main thing to remember for now is since this is a personal project being used for testing, we don’t necessarily want to share it with the entire world, so we should set the “private” argument equal to TRUE when creating a new repository.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/46.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<aside class="notes">
+<p>Taking this information that we have now gathered, we can now within our Quarto Markdown create a code chunk, write out the line of code calling the function, and providing the Private=TRUE argument within the ().</p>
+<p>Within a code chunk, adding a # in front of a line of code, will comment it out, resulting in that line of code not being run. Since we have already installed the <code>usethis</code> package, and we don’t want to reinstall it every single time, let’s go ahead and comment out that line. Go ahead and press Enter.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/47.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<aside class="notes">
+<p>We will see a message pop-up in the console. In this case, we had not saved before pressing enter, so there are uncommitted changes within the folder. The pop-up is asking whether you want to save these as well before sending the Folder to GitHub.</p>
+<p>In this case I will chose to ignore the uncommitted changes by entering 3 (for Definitely) in the console and hitting enter on my keyboard.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/48.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<aside class="notes">
+<p>The <code>usethis</code> R package will then execute the series of git commands that are needed to set up a GitHub repository (ie. the messages being displayed in the console window), and when finished will open a pop-up asking whether you want to see your new repository in your default Web Browser. I will go ahead and select yes in this case.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/49.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<aside class="notes">
+<p>After the browser opens, you can see that the elements I had staged and committed within Positron are now present within the GitHub repository. Since I had only staged Example.qmd, it is the only file that was backed up. We can also see the commit history online by clicking on the commit clock.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/50.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<aside class="notes">
+<p>As we would expect, we only see our two commit messages. One important thing to note is the commit hash numbers, that denote a particular commit. If we decided to revert/fall back to a prior commit in the future, this would be the number we would need to provide to Git to return to that previous commit/save-state</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/51.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<aside class="notes">
+<p>Similarly, on GitHub, we have an option to Browse a Repository at a particular point in time. This will be quite useful later in the future when troubleshooting what major changes occurred between versions of an R package.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/52.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<h3 id="code-chunk-arguments">Code Chunk Arguments</h3>
+<aside class="notes">
+<p>Having successfully connected our local Project Folder to a remote GitHub repository, let’s return to Positron.</p>
+<p>Before continuing, if we left the code chunk that created the GitHub repository as is, every time we ran all code chunks in the document, it would try to recreate the GitHub repository. We don’t want this to happen, as the setup was a one-time operation.</p>
+<p>While we could add # in front of every line of code (or delete the code chunk entirely) it is often useful to have these set-up code chunks around to remind us what arguments we need to provide next time we need to a similar setup and are mind blanking on what to do.</p>
+<p>Fortunately, Quarto allows us to set conditions on whether a chunk is run (ie. evaluated). We will discuss the conditiona arguments in more depth in the <a href="../../course/00_Quarto/index.html">next section</a>, but for now, we can modify the code chunk as follows.</p>
+<p>On the next line after the {r}, we will add a hashtag (#), then a pipe (|), followed by a space. This is the setup for a code-chunk specific argument. We will then add “eval: FALSE”, which signals that the particular code-chunk should not be evaluated (ie, should not be run).</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/53.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<h3 id="readme">README</h3>
+<aside class="notes">
+<p>Now that we have connected our local Project Folder to GitHub, and have gotten a basic introduction to the “git add”, “git commit” arguments, let’s turn our focus to the other files currently listed as untracked by Git within our folder, the README.md and the .gitignore files.</p>
+<p>When setting up our <a href="">GitHub</a> account, we encounted an example of a README.md file. This file often provides a brief description of the project, and an outline of what the other files in the folder are for. As you may have gathered, even software developers are forgetful/under-caffenaited, and having notes to catch back up to speed is important.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/54.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<h3 id="gitignore">.gitignore</h3>
+<aside class="notes">
+<p>We additionally have a .gitignore file. Within a project, there are often some files that we will never want version control to track. These could be files that are too large for GitHub (ex. really large .fcs files), or files containing sensitive information (passwords, history, credentials, etc.).</p>
+<p>When the names of these file (or the file type shothand) are added to the .gitignore file, they are ignored by version control, and no longer appear on the primary left side bar.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/54.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<aside class="notes">
+<p>Let’s proceed and stage both the README.md and .gitignore file, so that changes to these files will be tracked. We can of course select both from the primary left side bar and write a short commit message.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/55.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+
+<img data-src="images/56.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<aside class="notes">
+<p>Or alternatively, if we want to stage all uncommitted files present in a single step, we could in the terminal use the “git add .”</p>
+<p>We can then write our git commit using “git commit -m”.</p>
+<p>Both approaches work, and you may switch between them based on preferrence.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/57.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<aside class="notes">
+<p>You will notice after having committed, that if you look at the Graph dropdown on the bottom half of the primary left side-bar that something has changed.</p>
+<p>There are now separate icons denoted as main and origin/main. These correspond to the last commit present locally (main), and the last commit on remote (ie. GitHub, origin/main).</p>
+<p>Local is ahead since you just made the commit with the changes inactivating the code-chunk, and you have not passed these changes up to GitHub yet.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/58.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<h3 id="pull">Pull</h3>
+<aside class="notes">
+<p>Before sending (ie. pushing up) our updated commit to GitHub, especially if you are working on a project from multiple computers (or as part of a team) to bring in (ie. pull down) any changes that might be on GitHub that are not present locally.</p>
+<p>This ensures that everything is up to date, and you don’t end up with mismatched commits that are incompatible with each other and trigger an error message.</p>
+<p>To pull in changes from GitHub, at the top of the primary left side-bar, you can select the … button to open a drop-down menu of Git options. You would then select “Pull”.</p>
+<p>Alternatively, you could do the same thing via the terminal by running the “git pull” command.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/59.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<h3 id="push">Push</h3>
+<aside class="notes">
+<p>In our case, there was no new material present on our GitHub repository that were not already present locally, so all that is returned is the “Already up to date” message.</p>
+<p>We are now good to proceed to push (ie. send) the updated commit up to our GitHub repository.</p>
+<p>We can do this by either pressing the Sync changes button, or via the terminal entering the “git push” command.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/60.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<aside class="notes">
+<p>And now, if you glance down at left side-bar’s graph section, you will see that both the main and origin/main icons are now present for the most recent commit.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/61.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<aside class="notes">
+<p>If we switch to our Web browser, we can see that this is also now the case for our GitHub repository that now also has the most recent changes.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/62.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<h3 id="reverting-to-prior-commit">Reverting to Prior Commit</h3>
+<aside class="notes">
+<p>For most daily-workflows, you will only need the git commands that we have introduced above (git add, commit, pull, push). The next two areas (reverting to a prior commit, and branches) are more specialized, and will be covered in greater depth later in the course. We are briefly covering them here. If you are at the point where your last remaining neuron has disconnected, and you feel you need to take a break from version control, feel free to skip to the <a href="../../course/00_Quarto/index.html">next section</a> and we will revisit these topics later in the course.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+<p><br></p>
+<p>–</p>
+<aside class="notes">
+<p>In most cases, if your code stops working, you can identify the issue and fix it in the existing version, never needing to resort to reverting to a previous commit (save-state). The times you would need to revert would be if you deleted important files, or the new files are hopeless mess that is not worth trying to sort through. In those cases, reverting back might be better approach.</p>
+<p>To imitate a falling back scenario, lets create and additional file, stage and commit it to end up a commit ahead of where we are currently at within the Project Folder.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/00_RevertTest.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<aside class="notes">
+<p>Now being one (or several) commits ahead, if we wanted to revert back, we would first need to identify the commit we want to revert back to and copy the commit hash number.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/00_CommitHash.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<aside class="notes">
+<p>Then, opening the terminal, we can enter “git reset” and paste the hash afterwards. We can then press enter.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/00_GitReset.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<aside class="notes">
+<p>You will notice our additional commit has been removed, although the newer files we were working on subsequent last commit are still present.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/00_GitResetExecuted.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<aside class="notes">
+<p>If however, we had wanted to return to the exact same state as the previous commit (removing all subsequent created files), we could do so by adding in the –hard argument. Before starting, save any newer files you want to keep in a completely different folder, because they will be permanently removed.</p>
+<p>Then, enter “git reset –hard thecommithashnumber” into the terminal, which would result in a “hard” return to the previous commits save-state. You may need to close and reopen Positron to see the changes reflected.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+<h3 id="branches">Branches</h3>
+<aside class="notes">
+<p>Branches are an useful Git feature that we will start using extensively later in the course. Branching allows you to create a parallel/carbon-copy of your existing repository, which you can then edit without affecting the main branch. This is particularly useful for projects that may get messy or drawn out. By isolating these edits to a parallel branch, if they don’t work, your main branch remains safe. Alternatively, if you like the changes that occurred in the branch, you can pull these changes from the branch back to main, bringing the timelines back together.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="https://book.the-turing-way.org/build/sub-branch-491000deab04cb25ea703c007e2ebdd2.png" class="r-stretch"></section>
+<section class="slide level2">
+
+<aside class="notes">
+<p>Within the terminal, entering “git branch” will show the existing branches. In this case, only main is present since we haven’t yet created a new branch.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/00_Branch.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<aside class="notes">
+<p>We can create a new branch in the terminal by entering “git branch” followed by the name of our desired branch. In this case, we are creating a branch called Week1</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/00_Week1.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<aside class="notes">
+<p>Now, when we check “git branch” again in the terminal, which returns the two branches, Week1 and main. The * is located next to main, indicating that we are currently within the main branch.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/00_Branches.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<aside class="notes">
+<p>Besides the terminal, we can also create a new branch via Positron. To do so, we first click on the Git tab in the Actions Bar.</p>
+<p>Once the left-side bar displays the version control display, we can click on the … button (to the right of changes)to gain access to the Git options drop-down.</p>
+<p>From here, we click on Branch, and then select Create Branch.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/00_BranchesGUI.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<aside class="notes">
+<p>Using Git branch, we saw that we were still within the main branch. In the terminal, we can switch over to the Week1 branch by using the “git checkout” command, followed by the branch we wish to switch to.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/00_Checkout.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<aside class="notes">
+<p>This results in us switching over to the Week1 branch.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/00_CheckoutOutput.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<aside class="notes">
+<p>Having switched (ie. checkout) to the Week 1 branch, let’s create the file BranchTest.qmd, which will exist within this branch, but not yet in the main branch.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/00_BranchTest.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<aside class="notes">
+<p>Having created the file, let’s stage and then commit it. This will put the Week1 branch ahead of the main branch by a single commit.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/BranchCommit.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<aside class="notes">
+<p>With our changes staged and committed, if we look at the left side-bar’s graph section, our Week1 branch is now ahead of the origin/main branch by one commit.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/00_BranchToOrigin.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<aside class="notes">
+<p>If we were to check on GitHub, we can see that no new files are present on the main branch, but can see the notification listing recent changes to Week1 branch.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/00_GitHub.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<aside class="notes">
+<p>Using the drop-down, we can switch from displaying the main branch to the Week1 branch, where we can see the new file.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/00_GitHubWeek1.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<aside class="notes">
+<p>If we click the green compare and pull request button, we end up on this screen. This compares how the two branches are different from each other.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/00_GithubWeek1Merge.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<aside class="notes">
+<p>We will delve into branches again at a later point. For now, remember that by creating and prunning parallel branches, you can develop knowing that even if something goes wrong, your main branch remains safe.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section></section>
+<section id="wrap-up" class="title-slide slide level1 center">
+<h1>Wrap-Up</h1>
+<aside class="notes">
+<p>In this section, we saw how to create a New Project Folder, create files and back up the project folder to GitHub. We also started learning about git, covering the basic commands (git add, commit, pull, push). If you feel a bit overwhelmed, please know, that is normal. Understanding how to leverage git takes time and practice, but is an incredibly valuable skillset to have in the long run.</p>
+<p>In the <a href="../../course/00_Quarto/index.html">next section</a>, we will look at how by changing various elements within our .qmd file produce a variety of files, and how to leverage code-chunk arguments to fine-tune whether a code-chunk is utilized.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+
+<section id="additional-resources" class="title-slide slide level1 center">
+<h1>Additional Resources</h1>
+<p><a href="https://gitbookdown.dallasdatascience.com/">Git &amp; GitHub Tutorial for Scientist: It’s Not Only for Programmers</a></p>
+<p><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC4945047/">Ten Simple Rules for Taking Advantage of Git and GitHub</a></p>
+<p><a href="https://youtu.be/r8jQ9hVA2qs?si=IYe7JghJpVTz9Ht4">A brief introduction to Git for beginers</a></p>
+<div style="text-align: right;">
+<p><a href="https://www.gnu.org/licenses/agpl-3.0.en.html"><img data-src="https://www.gnu.org/graphics/agplv3-with-text-162x68.png" alt="AGPL-3.0"></a> <a href="http://creativecommons.org/licenses/by-sa/4.0/"><img data-src="https://licensebuttons.net/l/by-sa/4.0/88x31.png" alt="CC BY-SA 4.0"></a></p>
+</div>
+
+
+</section>
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<div class="footer footer-default">
+
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="../../site_libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="../../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="../../site_libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="../../site_libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="../../site_libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="../../site_libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="../../site_libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="../../site_libs/revealjs/plugin/search/search.js"></script>
+  <script src="../../site_libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="../../site_libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1050,
+
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    
+    <script>
+      // htmlwidgets need to know to resize themselves when slides are shown/hidden.
+      // Fire the "slideenter" event (handled by htmlwidgets.js) when the current
+      // slide changes (different for each slide format).
+      (function () {
+        // dispatch for htmlwidgets
+        function fireSlideEnter() {
+          const event = window.document.createEvent("Event");
+          event.initEvent("slideenter", true, true);
+          window.document.dispatchEvent(event);
+        }
+
+        function fireSlideChanged(previousSlide, currentSlide) {
+          fireSlideEnter();
+
+          // dispatch for shiny
+          if (window.jQuery) {
+            if (previousSlide) {
+              window.jQuery(previousSlide).trigger("hidden");
+            }
+            if (currentSlide) {
+              window.jQuery(currentSlide).trigger("shown");
+            }
+          }
+        }
+
+        // hookup for slidy
+        if (window.w3c_slidy) {
+          window.w3c_slidy.add_observer(function (slide_num) {
+            // slide_num starts at position 1
+            fireSlideChanged(null, w3c_slidy.slides[slide_num - 1]);
+          });
+        }
+
+      })();
+    </script>
+
+    <script id="quarto-html-after-body" type="application/javascript">
+      window.document.addEventListener("DOMContentLoaded", function (event) {
+        const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+        tabsets.forEach(function(tabset) {
+          const tabby = new Tabby('#' + tabset.id);
+        });
+        const isCodeAnnotation = (el) => {
+          for (const clz of el.classList) {
+            if (clz.startsWith('code-annotation-')) {                     
+              return true;
+            }
+          }
+          return false;
+        }
+        const onCopySuccess = function(e) {
+          // button target
+          const button = e.trigger;
+          // don't keep focus
+          button.blur();
+          // flash "checked"
+          button.classList.add('code-copy-button-checked');
+          var currentTitle = button.getAttribute("title");
+          button.setAttribute("title", "Copied!");
+          let tooltip;
+          if (window.bootstrap) {
+            button.setAttribute("data-bs-toggle", "tooltip");
+            button.setAttribute("data-bs-placement", "left");
+            button.setAttribute("data-bs-title", "Copied!");
+            tooltip = new bootstrap.Tooltip(button, 
+              { trigger: "manual", 
+                customClass: "code-copy-button-tooltip",
+                offset: [0, -8]});
+            tooltip.show();    
+          }
+          setTimeout(function() {
+            if (tooltip) {
+              tooltip.hide();
+              button.removeAttribute("data-bs-title");
+              button.removeAttribute("data-bs-toggle");
+              button.removeAttribute("data-bs-placement");
+            }
+            button.setAttribute("title", currentTitle);
+            button.classList.remove('code-copy-button-checked');
+          }, 1000);
+          // clear code selection
+          e.clearSelection();
+        }
+        const getTextToCopy = function(trigger) {
+            const codeEl = trigger.previousElementSibling.cloneNode(true);
+            for (const childEl of codeEl.children) {
+              if (isCodeAnnotation(childEl)) {
+                childEl.remove();
+              }
+            }
+            return codeEl.innerText;
+        }
+        const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+          text: getTextToCopy
+        });
+        clipboard.on('success', onCopySuccess);
+        if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+          const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+            text: getTextToCopy,
+            container: window.document.getElementById('quarto-embedded-source-code-modal')
+          });
+          clipboardModal.on('success', onCopySuccess);
+        }
+          var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+          var mailtoRegex = new RegExp(/^mailto:/);
+            var filterRegex = new RegExp('/' + window.location.host + '/');
+          var isInternal = (href) => {
+              return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+          }
+          // Inspect non-navigation links and adorn them if external
+         var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+          for (var i=0; i<links.length; i++) {
+            const link = links[i];
+            if (!isInternal(link.href)) {
+              // undo the damage that might have been done by quarto-nav.js in the case of
+              // links that we want to consider external
+              if (link.dataset.originalHref !== undefined) {
+                link.href = link.dataset.originalHref;
+              }
+            }
+          }
+        function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+          const config = {
+            allowHTML: true,
+            maxWidth: 500,
+            delay: 100,
+            arrow: false,
+            appendTo: function(el) {
+                return el.closest('section.slide') || el.parentElement;
+            },
+            interactive: true,
+            interactiveBorder: 10,
+            theme: 'light-border',
+            placement: 'bottom-start',
+          };
+          if (contentFn) {
+            config.content = contentFn;
+          }
+          if (onTriggerFn) {
+            config.onTrigger = onTriggerFn;
+          }
+          if (onUntriggerFn) {
+            config.onUntrigger = onUntriggerFn;
+          }
+            config['offset'] = [0,0];
+            config['maxWidth'] = 700;
+          window.tippy(el, config); 
+        }
+        const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+        for (var i=0; i<noterefs.length; i++) {
+          const ref = noterefs[i];
+          tippyHover(ref, function() {
+            // use id or data attribute instead here
+            let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+            try { href = new URL(href).hash; } catch {}
+            const id = href.replace(/^#\/?/, "");
+            const note = window.document.getElementById(id);
+            if (note) {
+              return note.innerHTML;
+            } else {
+              return "";
+            }
+          });
+        }
+        const findCites = (el) => {
+          const parentEl = el.parentElement;
+          if (parentEl) {
+            const cites = parentEl.dataset.cites;
+            if (cites) {
+              return {
+                el,
+                cites: cites.split(' ')
+              };
+            } else {
+              return findCites(el.parentElement)
+            }
+          } else {
+            return undefined;
+          }
+        };
+        var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+        for (var i=0; i<bibliorefs.length; i++) {
+          const ref = bibliorefs[i];
+          const citeInfo = findCites(ref);
+          if (citeInfo) {
+            tippyHover(citeInfo.el, function() {
+              var popup = window.document.createElement('div');
+              citeInfo.cites.forEach(function(cite) {
+                var citeDiv = window.document.createElement('div');
+                citeDiv.classList.add('hanging-indent');
+                citeDiv.classList.add('csl-entry');
+                var biblioDiv = window.document.getElementById('ref-' + cite);
+                if (biblioDiv) {
+                  citeDiv.innerHTML = biblioDiv.innerHTML;
+                }
+                popup.appendChild(citeDiv);
+              });
+              return popup.innerHTML;
+            });
+          }
+        }
+      });
+      </script>
+    
+
+</body></html>

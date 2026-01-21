@@ -1,0 +1,1224 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-html/tabby.min.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.7.32">
+
+  <meta name="author" content="David Rach">
+  <meta name="dcterms.date" content="2026-01-21">
+  <title>Cytometry in R – Using Positron</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="../../site_libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="../../site_libs/revealjs/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+  </style>
+  <link rel="stylesheet" href="../../site_libs/revealjs/dist/theme/quarto-f563837468303362081e247dddd440d0.css">
+  <script async="" src="https://www.googletagmanager.com/gtag/js?id=G-LZ35J3XE4D"></script>
+
+  <script type="text/javascript">
+
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
+  </script>
+  <link href="../../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="../../site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="../../site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="../../site_libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" class="quarto-title-block center">
+  <h1 class="title">Using Positron</h1>
+
+<div class="quarto-title-authors">
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+David Rach 
+</div>
+</div>
+</div>
+
+  <p class="date">2026-01-21</p>
+</section>
+<section class="slide level2">
+
+<p><img data-src="../../images/WebsiteBanner.png"></p>
+<div style="text-align: right;">
+<p><a href="https://www.gnu.org/licenses/agpl-3.0.en.html"><img data-src="https://img.shields.io/badge/license-AGPLv3-blue.png" alt="AGPL-3.0"></a> <a href="http://creativecommons.org/licenses/by-sa/4.0/"><img data-src="https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg" alt="CC BY-SA 4.0"></a></p>
+</div>
+</section>
+<section id="background" class="title-slide slide level1 center">
+<h1>Background</h1>
+<aside class="notes">
+<p>In this course, we are creating and working with code from the programming language <a href="https://www.r-project.org/">R</a>. However, in practice, we are not running the code directly using just the base R software. Typically, we are running an integrated development environment (IDE), which is an additional software running on top of base R.</p>
+<p>An IDE has the responsibility to help organize and manage the projects folders, pass along lines of code being executed (run) to the underlying R software, and then return and visualize the outputs in a manner that leads to increased producitivity. Examples of IDEs include <a href="https://positron.posit.co/">Positron</a>, <a href="https://code.visualstudio.com/">Visual Studio Code</a> and <a href="https://posit.co/downloads/">Rstudio</a>.</p>
+<p>For this course, we will be using <a href="https://positron.posit.co/">Positron</a> as our primary IDE. For those of you who have previous R experience, you are likely more familiar with <a href="https://posit.co/downloads/">Rstudio</a> which is also made by Posit, and is the older of the two IDEs. Why use Positron for this course then?</p>
+<p>There are several reasons. First, Positron combines the best elements of both Rstudio (which preceeded it) and VS code (from which it’s base infrastructure was <a href="https://posit.co/blog/positron-product-announcement-aug-2025/">forked</a>). In a course aimed at coding beginners, this combination is immensely helpful in bringing important elements that had been previously hidden behind several menus in Rstudio out into the open where they are immediately available, reducing complicated workarounds. In my recent experience, it has been easier to teach beginners to code well with Positron than it was previously with Rstudio.</p>
+<p>Second, Data Science (and Bioinformatics) is increasingly moving in a multi-lingual programming direction. Flow Cytometry is not immune to this trend, <a href="https://www.python.org/">Python</a>, <a href="https://julialang.org/">Julia</a> and <a href="https://rust-lang.org/">Rust</a> are appearing more in <a href="https://www.cytoconference.org/index.html">Cyto posters</a> each year. Positron is built to handle this, allowing us to bring in and use cool packages regardless of what language they are written, avoiding additional complicated workarounds to get them to work in Rstudio.</p>
+<p>And finally, having placed so much effort into making these resources available to the wider community, I don’t want to provide all my examples using Rstudio only to find out two years from now that maintenance has been discontinued by Posit and everything needs to be remade.</p>
+<p>Consequently, I decided to use Positron for the course. This walk-through will cover some of the main layout elements to help start build some initial familiarity with the IDE, which we will continue to build on throughout the course.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+
+<section>
+<section id="getting-started" class="title-slide slide level1 center">
+<h1>Getting Started</h1>
+<aside class="notes">
+<p>When opening Positron for the first time, you will see something like this. Let’s work our way around the screen, covering the major items in turn.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/01_PositronOpen.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+</section></section>
+<section>
+<section id="interpreter" class="title-slide slide level1 center">
+<h1>Interpreter</h1>
+<aside class="notes">
+<p>On the upper right, above Session/Variables tab, you have the option to select the coding language (interpreter) being used by the project folder. For most of this course, you will likely see this set to R 4.5.2 (or your current R version). If your computer has Python installed, you may also see these versions appear within the interpreter drop-down menu.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/30_Session.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+</section></section>
+<section>
+<section id="folders" class="title-slide slide level1 center">
+<h1>Folders</h1>
+<aside class="notes">
+<p>As <a href="../../course/00_WorkstationSetup/index.html">briefly covered</a> at the end of WorkStation walkthrough, the folders button to the right of the interpretor button allows us to open and work with Project Folders. From the drop-down, we can also Create New Folder from a template (which we will cover in the next section), or bring them in from existing GitHub repositories (as we did last section). You will also find the option to open other project folders that have been opened recently.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/31_ProjectFolderAccess.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+</section></section>
+<section>
+<section id="panel" class="title-slide slide level1 center">
+<h1>Panel</h1>
+<aside class="notes">
+<p>At the bottom-center of the screen you will find the Panel region. This contains several tabs (Console, Terminal, etc).</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="https://positron.posit.co/images/user-interface-for-rstudio-migration.jpeg" class="r-stretch"></section>
+<section id="console" class="slide level2">
+<h2>Console</h2>
+<aside class="notes">
+<p>At the bottom of the sceen, you will first see the Console Tab. This is the tab where your lines of code when executed (run) will appear, as well as any messages, warnings or errors that get returned. On the right side of the console, you can find several buttons, among them restart R and delete session (for when you need a fresh start), and clear console (which keeps all previously run outputs and objects, but clears away the displayed text within the console).</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/02_Console.png" class="r-stretch"><p><br></p>
+</section>
+<section id="terminal" class="slide level2">
+<h2>Terminal</h2>
+<aside class="notes">
+<p>Right next to the Console tab is your Terminal tab. While the console tab is primarily used to run R code within Positron, the terminal is the interface where code containing system commands directed at at your computer is entered. We will use this less frequently, primarily in two context: 1) rendering Quarto documents, and 2) commiting changes to version control. Among the buttons on the right-side of the terminal to make note of are the + button to add a new terminal, and the trash/garbage can button to kill (stop) the terminal.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/03_Terminal.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<aside class="notes">
+<p>The other tabs (Problems, Output, Ports, Debug Console) are used less frequently. I usually will Problems and Debug when something goes wrong with the code, as various warning and error messages will end up being displayed there.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/03_Terminal.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+</section></section>
+<section>
+<section id="editor" class="title-slide slide level1 center">
+<h1>Editor</h1>
+
+<img data-src="https://positron.posit.co/images/user-interface-for-rstudio-migration.jpeg" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<aside class="notes">
+<p>Located above the panel section (ie, just above the console window) is the main area known as the Editor. It is typically where you end up writing your code. It displays any and all the files that you open.</p>
+<p>For example, when I open a .png for one of my projects, the image will appear within the editor area in the middle of my screen.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/04_VisualizedPNG.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<aside class="notes">
+<p>When the file I open is an .R script, I will be able to see and edit the code contained within that same area.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/05_R.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<aside class="notes">
+<p>Should I open a Quarto markdown file (.qmd), I can see and edit both the written as well as the code chunks contained within.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/06_QMD.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<aside class="notes">
+<p>Looking below the tabs of the opened files, I can see the file.path (location) for the file I currently have open and am working on. This is denoted by the &gt; &gt; &gt; interspersed with the parent folder names.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/07_FilePath.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<aside class="notes">
+<p>Just above the file path, and below the tabs, we find a couple buttons. Preview is used to render a Quarto document into various types of documents (including .html, .pdf or .docx) as long as no errors are encountered.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/08_Preview.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<aside class="notes">
+<p>Source tab will normally be the active view, which will show everything as code/<a href="https://www.markdownguide.org/getting-started/">markdown</a></p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/09_Source.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<aside class="notes">
+<p>However, when we switch to Visual mode, it will visualize in a similar manner as if we had rendered the document as an .html webpage.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/10_Visual.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<aside class="notes">
+<p>As more files are opened, they will appear as individual tabs. These can be opened and closed as need be. The color of the text also displays their saved status.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/11_NavigatingBetween.png" class="r-stretch"><p><br></p>
+</section>
+<section id="help" class="slide level2">
+<h2>Help</h2>
+<aside class="notes">
+<p>When trying to evaluate how a particular function is working in R, you can hover over it and positron will open up the documentation for that particular function if available, alternatively, you can enter ?theParticularFunctionsName in the console and hit enter to similarly view what is occuring.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/Help.png" class="r-stretch"></section></section>
+<section>
+<section id="primary-side-bar" class="title-slide slide level1 center">
+<h1>Primary Side Bar</h1>
+
+<img data-src="https://positron.posit.co/images/user-interface-for-rstudio-migration.jpeg" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<aside class="notes">
+<p>To open a file, several options exist. If they are present within your Project folder, you can click on the pages tab on the activity bar (far upper left) and then click on the file of interest shown within the primary side bar (between the activity bar and the editor). Alternatively, the Open Folder icon on the upper-left or entering “Ctrl + O”/“Command + O” will open a pop-up to allow you to navigate and select a folder elsewhere on your computer.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/OpenFile.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<aside class="notes">
+<p>Unsaved changes to an open file are reflected by on the tab the change in color of the text, and the appearance of a dot. We can click the Save changes button to change this.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/SaveChanges.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+</section></section>
+<section>
+<section id="secondary-side-bar" class="title-slide slide level1 center">
+<h1>Secondary Side Bar</h1>
+
+<img data-src="https://positron.posit.co/images/user-interface-for-rstudio-migration.jpeg" class="r-stretch"><aside class="notes">
+<p>The secondary side bar is found on the right-side of the screen, to the right of the Editor and Panel windows. It is divided between an upper, and a lower portion.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="variables" class="slide level2">
+<h2>Variables</h2>
+<aside class="notes">
+<p>On the upper-portion of the Secondary Side Bar, we can find the Session window, containing the Variables tab. As you run (execute) lines of code, and different variables, objects and functions are created, these become visible under the variables tab on the upper right.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/SessionVariables.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<aside class="notes">
+<p>For some types of objects (generally data.frames and other matrix-like objects), you can click on their listing under variables to expand to see additional details about the object (column names, etc.) as well as view a larger version which will appear within the Editor window.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="plots" class="slide level2">
+<h2>Plots</h2>
+<aside class="notes">
+<p>Similarly, any generated Plots or Documents will appear within the Secondary Side Bar, either under Plots (bottom) or Viewer (top) tabs.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/SessionPlots.png" class="r-stretch"><p><br></p>
+</section>
+<section id="view" class="slide level2">
+<h2>View</h2>
+<aside class="notes">
+<p>On the upper bar multiple tabs can be found, which we will explore in due time. Most useful to point out is the View tab. If you accidentally close your console, session or plots window, and are trying to get them to reapper, you would need to reselect them from this tab.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/28_View.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+</section></section>
+<section>
+<section id="activity-bar" class="title-slide slide level1 center">
+<h1>Activity Bar</h1>
+
+<img data-src="https://positron.posit.co/images/user-interface-for-rstudio-migration.jpeg" class="r-stretch"><aside class="notes">
+<p>At the far-left side of the screen, you will find the activity bar, which contains several tabs. Depending on which one you have opened, the contents will be displayed on the primary side bar next to it.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+<section id="pages" class="slide level2">
+<h2>Pages</h2>
+<aside class="notes">
+<p>The pages tab and the left-side bar show you everything that is currently within your project folder, including all the folders, and files. Once version control with Git is initiated, new files are relected showing up as green text and a dot, while modified tracked files are reflected by light brown text and a dot.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/27_ChangesSinceLastCommit.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<aside class="notes">
+<p>The dropdown arrows can be used to open and close specific folders to allow for better organization. There is also a scrollbar on the right-side of the side-bar to scroll through the entire folders contents.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/26_MainTab.png" class="r-stretch"><p><br></p>
+</section>
+<section id="search" class="slide level2">
+<h2>Search</h2>
+<aside class="notes">
+<p>The search tab on the left side bar is something that I use routinely.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/24_SearchTab.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<aside class="notes">
+<p>It can help locate code that you had been working on, but have since forgotten where it is at. Here is an example of finding the files where I had used a function that needed modifying within a local project folder’s files.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/25_SearchResults.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<aside class="notes">
+<p>Similarly, if you need to replace a particular character string with another, the replace with field below can help simplify the task without having to track down and change 20 lines across 5 files.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/24_SearchTab.png" class="r-stretch"><p><br></p>
+</section>
+<section id="extensions" class="slide level2">
+<h2>Extensions</h2>
+<aside class="notes">
+<p>On the far-left side we can find the Activity bar, which contains several tabs. Which tab you have selected will then dictate the contents of your left side-bar.</p>
+<p>Occupying the left side bar are several tabs. One of these is Extensions, which shows “Plugins” (or the VScode equivalent) that extend the functionality of Positron further. The ones you have installed may vary, but the main ones in context of this course are Air (provides color and highlights syntax for R code to make interpretation easier) as well as Quarto (for rendering the various document types).</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/29_ExtensionsTab.png" class="r-stretch"><p><br></p>
+</section>
+<section id="git" class="slide level2">
+<h2>Git</h2>
+<aside class="notes">
+<p>The Git tab on the left side bar is where once version control is initiated for the project folder, we can see changes that have occurred to the individual files since the last commit. These changes can be added to a new commit by clicking on the + sign. This will be covered more extensively in the <a href="../../course/00_Git/index.html">next section</a></p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/20_SaveChanges.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<aside class="notes">
+<p>Similarly, if you want to discard a change that has occured, the circular arrow will revert to the last commited version. Selecting and pressing the delete button will similarly work.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/21_DiscardChanges.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+<aside class="notes">
+<p>Selecting the … options will highlight all the various git functions, some of which we will cover more extensively in the <a href="../../course/00_Git/index.html">next section</a> and throughout the course.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+
+<img data-src="images/23_AdditionalGitOptions.png" class="r-stretch"><p><br></p>
+</section>
+<section class="slide level2">
+
+</section></section>
+<section id="wrap-up" class="title-slide slide level1 center">
+<h1>Wrap-up</h1>
+<aside class="notes">
+<p>In this walk-through, we looked at some of the elements within Positron. Don’t worry, you don’t need to remember them all or what they do at this point of time, these will come with practice over the first few weeks of the course.</p>
+<p>In the <a href="../../course/00_Git/index.html">next section</a>, we will take a closer look at using the version control software Git that we have previewed here.</p>
+<style type="text/css">
+        span.MJX_Assistive_MathML {
+          position:absolute!important;
+          clip: rect(1px, 1px, 1px, 1px);
+          padding: 1px 0 0 0!important;
+          border: 0!important;
+          height: 1px!important;
+          width: 1px!important;
+          overflow: hidden!important;
+          display:block!important;
+      }</style></aside>
+</section>
+
+<section id="additional-resources" class="title-slide slide level1 center">
+<h1>Additional Resources</h1>
+<p><a href="https://posit.co/blog/a-quick-tour-of-positron/">A brief tour of Positron</a></p>
+<p><a href="https://youtu.be/4Ir_HX4riHw?si=awSUVjdzBPDVR4Iw">A brief tour of Positron (YouTube)</a></p>
+<p><a href="https://positron.posit.co/welcome.html">Welcome to Positron</a></p>
+<div style="text-align: right;">
+<p><a href="https://www.gnu.org/licenses/agpl-3.0.en.html"><img data-src="https://www.gnu.org/graphics/agplv3-with-text-162x68.png" alt="AGPL-3.0"></a> <a href="http://creativecommons.org/licenses/by-sa/4.0/"><img data-src="https://licensebuttons.net/l/by-sa/4.0/88x31.png" alt="CC BY-SA 4.0"></a></p>
+</div>
+
+
+</section>
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<div class="footer footer-default">
+
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="../../site_libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="../../site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="../../site_libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="../../site_libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="../../site_libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="../../site_libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="../../site_libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="../../site_libs/revealjs/plugin/search/search.js"></script>
+  <script src="../../site_libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="../../site_libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': false,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1050,
+
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+
+          RevealMath,
+          RevealNotes,
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    <script id="quarto-html-after-body" type="application/javascript">
+      window.document.addEventListener("DOMContentLoaded", function (event) {
+        const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+        tabsets.forEach(function(tabset) {
+          const tabby = new Tabby('#' + tabset.id);
+        });
+        const isCodeAnnotation = (el) => {
+          for (const clz of el.classList) {
+            if (clz.startsWith('code-annotation-')) {                     
+              return true;
+            }
+          }
+          return false;
+        }
+        const onCopySuccess = function(e) {
+          // button target
+          const button = e.trigger;
+          // don't keep focus
+          button.blur();
+          // flash "checked"
+          button.classList.add('code-copy-button-checked');
+          var currentTitle = button.getAttribute("title");
+          button.setAttribute("title", "Copied!");
+          let tooltip;
+          if (window.bootstrap) {
+            button.setAttribute("data-bs-toggle", "tooltip");
+            button.setAttribute("data-bs-placement", "left");
+            button.setAttribute("data-bs-title", "Copied!");
+            tooltip = new bootstrap.Tooltip(button, 
+              { trigger: "manual", 
+                customClass: "code-copy-button-tooltip",
+                offset: [0, -8]});
+            tooltip.show();    
+          }
+          setTimeout(function() {
+            if (tooltip) {
+              tooltip.hide();
+              button.removeAttribute("data-bs-title");
+              button.removeAttribute("data-bs-toggle");
+              button.removeAttribute("data-bs-placement");
+            }
+            button.setAttribute("title", currentTitle);
+            button.classList.remove('code-copy-button-checked');
+          }, 1000);
+          // clear code selection
+          e.clearSelection();
+        }
+        const getTextToCopy = function(trigger) {
+            const codeEl = trigger.previousElementSibling.cloneNode(true);
+            for (const childEl of codeEl.children) {
+              if (isCodeAnnotation(childEl)) {
+                childEl.remove();
+              }
+            }
+            return codeEl.innerText;
+        }
+        const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+          text: getTextToCopy
+        });
+        clipboard.on('success', onCopySuccess);
+        if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+          const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+            text: getTextToCopy,
+            container: window.document.getElementById('quarto-embedded-source-code-modal')
+          });
+          clipboardModal.on('success', onCopySuccess);
+        }
+          var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+          var mailtoRegex = new RegExp(/^mailto:/);
+            var filterRegex = new RegExp('/' + window.location.host + '/');
+          var isInternal = (href) => {
+              return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+          }
+          // Inspect non-navigation links and adorn them if external
+         var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+          for (var i=0; i<links.length; i++) {
+            const link = links[i];
+            if (!isInternal(link.href)) {
+              // undo the damage that might have been done by quarto-nav.js in the case of
+              // links that we want to consider external
+              if (link.dataset.originalHref !== undefined) {
+                link.href = link.dataset.originalHref;
+              }
+            }
+          }
+        function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+          const config = {
+            allowHTML: true,
+            maxWidth: 500,
+            delay: 100,
+            arrow: false,
+            appendTo: function(el) {
+                return el.closest('section.slide') || el.parentElement;
+            },
+            interactive: true,
+            interactiveBorder: 10,
+            theme: 'light-border',
+            placement: 'bottom-start',
+          };
+          if (contentFn) {
+            config.content = contentFn;
+          }
+          if (onTriggerFn) {
+            config.onTrigger = onTriggerFn;
+          }
+          if (onUntriggerFn) {
+            config.onUntrigger = onUntriggerFn;
+          }
+            config['offset'] = [0,0];
+            config['maxWidth'] = 700;
+          window.tippy(el, config); 
+        }
+        const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+        for (var i=0; i<noterefs.length; i++) {
+          const ref = noterefs[i];
+          tippyHover(ref, function() {
+            // use id or data attribute instead here
+            let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+            try { href = new URL(href).hash; } catch {}
+            const id = href.replace(/^#\/?/, "");
+            const note = window.document.getElementById(id);
+            if (note) {
+              return note.innerHTML;
+            } else {
+              return "";
+            }
+          });
+        }
+        const findCites = (el) => {
+          const parentEl = el.parentElement;
+          if (parentEl) {
+            const cites = parentEl.dataset.cites;
+            if (cites) {
+              return {
+                el,
+                cites: cites.split(' ')
+              };
+            } else {
+              return findCites(el.parentElement)
+            }
+          } else {
+            return undefined;
+          }
+        };
+        var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+        for (var i=0; i<bibliorefs.length; i++) {
+          const ref = bibliorefs[i];
+          const citeInfo = findCites(ref);
+          if (citeInfo) {
+            tippyHover(citeInfo.el, function() {
+              var popup = window.document.createElement('div');
+              citeInfo.cites.forEach(function(cite) {
+                var citeDiv = window.document.createElement('div');
+                citeDiv.classList.add('hanging-indent');
+                citeDiv.classList.add('csl-entry');
+                var biblioDiv = window.document.getElementById('ref-' + cite);
+                if (biblioDiv) {
+                  citeDiv.innerHTML = biblioDiv.innerHTML;
+                }
+                popup.appendChild(citeDiv);
+              });
+              return popup.innerHTML;
+            });
+          }
+        }
+      });
+      </script>
+    
+
+</body></html>

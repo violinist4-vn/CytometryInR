@@ -1,0 +1,86 @@
+---
+title: "Workstation Setup"
+author: "David Rach"
+date: 01-17-2026
+format: html
+toc: true
+toc-depth: 4
+---
+
+![](/images/WebsiteBanner.png)
+
+::: {style="text-align: right;"}
+[![AGPL-3.0](https://img.shields.io/badge/license-AGPLv3-blue)](https://www.gnu.org/licenses/agpl-3.0.en.html) [![CC BY-SA 4.0](https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg)](http://creativecommons.org/licenses/by-sa/4.0/)
+:::
+
+In the previous [section](/course/00_GitHub/index.qmd), we first set up your [GitHub](https://github.com/) account. Then we modified your GitHub profile and added a README section. Finally, we forked the [CytometryInR](https://github.com/UMGCCCFCSR/CytometryInR/) repository so that you can easily retrieve the new course materials each week. 
+
+It is now time to install the required software on your computer, which will get your work-station set up with everything needed for this course. Depending on your computers operating system, the installation requirements may differ a bit. In general, you will need to install the following software: 
+
+[R website](https://www.r-project.org/) : The programming language we will be using throughout the course. 
+
+[Positron](https://positron.posit.co/) : The integrated development environment (IDE) in which we will open, modify and run our code.
+
+[Git](https://git-scm.com/) : The version control software that will allow us to track changes to our files. 
+
+Additionally, Windows users will need to install:
+
+[RTools](https://cran.r-project.org/bin/windows/Rtools/rtools45/rtools.html) : Used to build R packages from source code. 
+
+You can find the operating system specific installation walkthroughs below. Once you have completed your specific walkthrough, return to this page and proceed to the [next section](/course/00_Positron/). 
+
+***Please note:*** For those using university or company administered computers, please be aware that you may not have the necessary permissions to install these directly, and may need to reach out to your IT department to help get the software installed and running correctly. 
+
+If you are using your own computer, congratulations, you are your system administrator, and should already have the necessary permissions.
+
+# Install Software for
+
+## Windows
+
+![](https://winaero.com/blog/wp-content/uploads/2021/06/Windows-11-Win-X-Menu-icon.png){width=25%}
+
+Installation walkthrough for [Windows](Windows.qmd)
+
+<br>
+
+---
+
+## MacOS
+
+![](https://substackcdn.com/image/fetch/$s_!G1lk!,f_auto,q_auto:good,fl_progressive:steep/https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2F8ed3d547-94ff-48e1-9f20-8c14a7030a02_2000x2000.jpeg){width=25%}
+
+Installation walkthrough for [MacOS](MacOS.qmd)
+
+<br>
+
+---
+
+## Linux (Debian)
+
+![](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTAx6camOf_G96Zcs2Zj34Yjmy0ysPd-p0oJQ&s){width=25%}
+
+Installation walkthrough for [Linux](Linux.qmd)
+
+<br>
+
+---
+
+# Additional Resources
+
+[How to Download and Install Software on Windows 11](https://youtu.be/IEhnWKZB4p4?t=60)
+
+[How to Install Software on a Mac](https://youtu.be/OH6cSQikbdw?si=ywXBU_eD2kl9AnLU)
+
+[How to Download and Install Software on Linux](https://youtu.be/lC4d4EpMMxg?si=9TeFkwFzrRbzA-Ma)
+
+[Riffomonas Project: Installing R, RStudio, and packages for Windows and Mac OS X (CC077)](https://youtu.be/D6CunpqF04E?si=jeU6-XiSRj-ygDf_)
+
+[A brief tour of Positron](https://posit.co/blog/a-quick-tour-of-positron/)
+
+[A brief introduction to Git for beginners](https://youtu.be/r8jQ9hVA2qs?si=jNastI7kNiGHHG9O)
+
+
+
+::: {style="text-align: right;"}
+[![AGPL-3.0](https://www.gnu.org/graphics/agplv3-with-text-162x68.png)](https://www.gnu.org/licenses/agpl-3.0.en.html) [![CC BY-SA 4.0](https://licensebuttons.net/l/by-sa/4.0/88x31.png)](http://creativecommons.org/licenses/by-sa/4.0/)
+:::

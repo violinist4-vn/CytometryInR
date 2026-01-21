@@ -1,0 +1,341 @@
+---
+title: "Installing Software on MacOS"
+author: "David Rach"
+date: 01-21-2026
+format: html
+toc: true
+toc-depth: 4
+---
+
+![](/images/WebsiteBanner.png)
+
+::: {style="text-align: right;"}
+[![AGPL-3.0](https://img.shields.io/badge/license-AGPLv3-blue)](https://www.gnu.org/licenses/agpl-3.0.en.html) [![CC BY-SA 4.0](https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg)](http://creativecommons.org/licenses/by-sa/4.0/)
+:::
+
+For screen-shot slides, click [here](/course/00_WorkstationSetup/MacOSSlides.qmd)
+
+For the YouTube narration, click [here](https://www.youtube.com/@CytometryInR)
+
+This is the software installation walkthrough for those whose computers are running MacOS. Based on our pre-course interest form, you make up a solid proportion of the course participants. 
+
+![](/course/00_WorkstationSetup/images/ComputerOS.png){width=100%}
+
+# Background
+
+In this walkthrough, we will have you install the following pieces of software:
+
+[R website](https://www.r-project.org/) : The programming language we will be using throughout the course. 
+
+[Positron](https://positron.posit.co/) : The integrated development environment (IDE) in which we will open, modify and run our code.
+
+[Git](https://git-scm.com/) : The version control software that will allow us to track changes to our files. You may or may not already it on your computer depending on whether Xcode Command Line Tools is installed. 
+
+Please note, the installation steps detailed below were carried out on a Mac with the older older pre-2020 x86 Intel chips, if you are running a Mac with the newer ARM (M1 or greater) chips, the installation instructions will differ some of the options you selecct during the download. If you encounter major differences in installation, please take screenshots and open an [issue](https://github.com/UMGCCCFCSR/CytometryInR/issues) so that we can update the documentation for your architecture. 
+
+<br>
+
+---
+
+# Getting Started
+
+<br>
+
+---
+
+## Installing R
+
+To get started, first navigate to the [R website](https://www.r-project.org/). Once there, click on [Download R](https://cran.r-project.org/mirrors.html) option towards the top of the page.
+
+![](images/MacOS/4_RLanding.png)
+
+<br>
+
+---
+
+On the next screen, you will need to select a mirror from which to download the software from. You can either select the closest geographic location (which may be faster) or alternatively just select the [Cloud](https://cloud.r-project.org/) option which should redirect you. 
+
+![](images/MacOS/5_RMirror.png)
+
+<br>
+
+---
+
+You will then select your Operating System, in this case, [macOS](https://cloud.r-project.org/bin/macosx/)
+
+
+![](images/MacOS/6_ROS.png)
+
+<br>
+
+---
+
+Next, you will need to select the appropiate [download](https://cloud.r-project.org/bin/macosx/) based on your computers architecture. On newer Macs (containing M1+ chips) this would the arm64 option on the center left of the screen. For the older Intel (pre-2020) Macs, you would select the x86_64 option. If you are unsure, check your [About This Mac](https://youtu.be/l3xW84TFeSA?si=i53tL5Ac_rEwEyjn) tab
+
+![](images/MacOS/7_RMacCPU.png)
+
+<br>
+
+---
+
+After the download has completed, launch the installer
+
+![](images/MacOS/8_RInstall.png)
+
+<br>
+
+---
+
+Proceed through the Read Me
+
+![](images/MacOS/9_RInstall.png)
+
+<br>
+
+---
+
+You will then be prompted to acccept the software license (which is the free copyleft GPL2 license, which we will learn about later in the course).
+
+![](images/MacOS/10_RInstallLicense.png)
+
+<br>
+
+---
+
+![](images/MacOS/11_RInstallLicense.png)
+
+<br>
+
+---
+
+Next, you will need to navigate through several pages, keeping the defaults. 
+
+![](images/MacOS/12_RInstall.png)
+
+<br>
+
+---
+
+And with any luck, you should see that the installation was successful. 
+
+![](images/MacOS/13_RInstall.png)
+
+<br>
+
+---
+
+## Xcode Command Line Tools
+
+Depending on your version of macOS, you may or may not already have [Git](https://git-scm.com/install/mac) installed. The reason for this is it is included within the Xcode Command Line Tools. 
+
+Often, when opening Positron for the first time, you will have a popup along the lines of "Git requires command line developer tools. Would you like to install the tools now?". If you encounter this, select Install. In addition to installing Git, these command line developer tools will also install the the equivalent of the Rtools for Windows, so you will need these tools regardless.
+
+Unfortunately, I had already installed these previously on my Mac, so I was not able to get the necessary screenshots for this documentation. If you encounter this popup on your installation, please take screen shots of each step, and [reach out](https://github.com/UMGCCCFCSR/CytometryInR/issues/4) so that I can appropiately update this documentation. 
+
+In case the popup doesn't trigger, and you need to install Xcode Command Line Tools yourself, please see these [instructions](https://clanfear.github.io/CSSS508/docs/compiling.html)
+
+![](/course/00_WorkstationSetup/images/MacOS/CommandLineTools.png){width=100%}
+
+## Install Positron
+
+Finally, you will install [Positron](https://positron.posit.co/). It is an integrated development environment (IDE) in which we will open, modify and run our code throughout the course.
+
+First, navigate to their [homepage](https://positron.posit.co/), and select the blue Download option button on the upper-right. 
+
+![](images/MacOS/1_Positron.png)
+
+<br>
+
+---
+
+You will then need to accept the Elastic License agreement to use the software (we will cover this source-available license type and what it does later in the course).
+
+With the license accepted, you will be able to select your operating system and the relevant installer depending on whether you are on an M1+ (ARM) or older Intel (x86) Mac.
+
+![](images/MacOS/2_PositronOS.png)
+
+<br>
+
+
+Once the Download completes, proceed to install the package as you normally would for any other program.
+
+<br>
+
+---
+
+# Connecting GitHub and Positron
+
+Now that you have all the software installed, we need to make sure that everything is communicating properly with each other. To do this, we will start by making sure your [GitHub](https://github.com/) account and Positron are connected. 
+
+When opening Positron for the first time, you will encounter the following view:
+
+![](images/MacOS/14_Positron.png)
+
+<br>
+
+---
+
+We will go over the various aspects of using Positron in the next [section](/course/00_Positron/index.qmd). For now select the "Start Session" button on the upper right, and then select the most recent/up-to-date R version. 
+
+
+![](images/MacOS/15_PositronSession.png)
+
+<br>
+
+---
+
+R will proceed to activate, and you will see a message appear in the bottom center window (ie. console)
+
+![](images/MacOS/16_PositronActive.png)
+
+<br>
+
+---
+
+Congratulations, we now know R is working correctly. Next up, connecting your GitHub account to Positron. To make this process easier, first log into your [GitHub](https://github.com/) account from your preferred web browser. 
+
+Once this is done, return to Positron, and click on the profile Icon and select "Sign with GitHub" option.
+
+![](images/MacOS/17_PositronGitHub.png)
+
+<br>
+
+---
+
+Positron will provide a popup containing a code you will need to give to GitHub to set up authentication. Proceed to click on the "Copy & Continue to GitHub" button. 
+
+![](images/MacOS/18.png)
+
+<br>
+
+---
+
+If you are already signed in, it will ask which account you want to connect Positron with. Select your GitHub account. 
+
+![](images/Windows/41_GitHub.png)
+
+<br>
+
+---
+
+You will then be prompted to paste the one-time code provided by Positron. Once pasted, click on Continue. 
+
+![](images/MacOS/20.png)
+
+<br>
+
+---
+
+And select "Authorize posit-dev" to authorize Positron to interact with your GitHub Account.
+
+![](images/MacOS/21_GitHubAccess.png)
+
+<br>
+
+---
+
+And if all works out, you should see the following succes page
+
+![](images/MacOS/22.png)
+
+<br>
+
+---
+
+Returning to Positron, check the profile tab on the lower left and verify that it now shows your GitHub account. If it does, congrats! If not, close Positron, check the tab again, and repeat the above one-time code steps if needed.
+
+![](images/MacOS/23_PositronAccessActive.png)
+
+<br>
+
+---
+
+# New Folder from Git
+
+With [GitHub](https://github.com/) and Positron now connected, we will bring your two repositories (the README and the fork of CytometryInR) from GitHub to your local computer. 
+
+To this, first navigate to the Folder icon on the upper-right, and select the "New Folder from Git" option
+
+![](images/MacOS/24.png)
+
+<br>
+
+---
+
+Lets first bring in your forked version of the Cytometry in R repository. Depending on your GitHub username, you would either need to copy the URL from your browser, or swap in your username in place of UMGCCCFCSR in "https://github.com/UMGCCCFCSR/CytometryInR"
+
+![](images/FolderFromGit1.png)
+
+<br>
+
+---
+
+You will also be asked for a location to store your project folder. It is best to save the folder locally (avoid using OneDrive or other cloud locations for now), as it makes things easier to save or modify without running into permission issues. For most of our course examples, we will be saving our Project Folders under the Documents Folder.
+
+![](images/Import2.png)
+
+<br>
+
+---
+
+You may encounter a pop-up asking whether you trust the authors for that particular folder. For your own projects, you are the author, so go ahead and select Yes. Selecting No is a good precaution when bringing in a random GitHub project that you haven't had time to properly vet. 
+
+![](images/MacOS/28.png)
+
+<br>
+
+---
+
+And with that done, you should now see the forked Cytometry in R course contents appear within Positron.  
+
+![](images/Import2Done.png)
+
+<br>
+
+---
+
+We will now repeat the process to bring in youir GitHub profile's ReadMe repository. Depending on your GitHub username, you would either need to copy the URL from your browser, or swap in your username twice in place for each UMGCCCFCSR: "https://github.com/UMGCCCFCSR/UMGCCCFCSR" 
+
+![](images/FolderFromGit2.png)
+
+<br>
+
+---
+
+After pasting the URL, and selecting the folder to save your project folder to (Documents in our case), select OK.
+
+![](images/Import2.png)
+
+<br>
+
+---
+
+And after a quick import you should now see your ReadMe repository files available and ready to be modified on your local computer.
+
+![](images/Import2Done.png)
+
+<br>
+
+---
+
+
+
+# Wrap-up
+
+In this walkthrough, we installed R, Positron, and ensured that Git/Command Line Tools were active. We also made sure to connect Positron and your GitHub account, and brought copies of your repositories into local project folders. With this, you now have on your workstation the major pieces of software needed for the course. 
+
+In the [next section](/course/00_Positron/), we will delve into how to use Positron, and explore more how to use the connection you set up with GitHub to send [changes](/course/00_Git/) from your local repositories back to GitHub.  
+
+# Additional Resources
+
+[How to Install Software on a Mac](https://youtu.be/OH6cSQikbdw?si=ywXBU_eD2kl9AnLU)
+
+[Riffomonas Project: Installing R, RStudio, and packages for Windows and Mac OS X (CC077)](https://youtu.be/D6CunpqF04E?si=jeU6-XiSRj-ygDf_)
+
+[A brief tour of Positron](https://posit.co/blog/a-quick-tour-of-positron/)
+
+[A brief introduction to Git for beginners](https://youtu.be/r8jQ9hVA2qs?si=jNastI7kNiGHHG9O)
+
+::: {style="text-align: right;"}
+[![AGPL-3.0](https://www.gnu.org/graphics/agplv3-with-text-162x68.png)](https://www.gnu.org/licenses/agpl-3.0.en.html) [![CC BY-SA 4.0](https://licensebuttons.net/l/by-sa/4.0/88x31.png)](http://creativecommons.org/licenses/by-sa/4.0/)
+:::

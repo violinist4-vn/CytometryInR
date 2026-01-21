@@ -8,20 +8,27 @@ sidebar: false
 ---
 ![](images/WebsiteBanner.png)
 
+<div style="text-align: right;">
+[![AGPL-3.0][agpl3-shield]][agpl3]
+[![CC BY-SA 4.0][cc-by-sa-shield]][cc-by-sa]
+</div>
+
 ### Cytometry in R: A Course for Beginners
 
-Last updated: Wednesday, December 17, 2025
+Cytometry in R is a free virtual mini-course being organized by the [Flow Cytometry Shared Resource](https://www.medschool.umaryland.edu/cibr/core/umgccc_flow/) core at the University of Maryland's [Greenebaum Comprehensive Cancer Center](https://www.umms.org/umgccc). This course is a passion project arising from our desire to contribute back to the community. We are excited that you have chosen to take part and look forward to helping you get started on your own learning journey. 
 
-Please complete the [interest form](https://docs.google.com/forms/d/e/1FAIpQLScPK4V_WNSgQvZNq7aIHpoiX8pi3kiuCfI0Tp7hQkVJS3HPtQ/viewform?usp=publish-editor) to stay in the loop as we finalize date and times. If you would like us to cover additional topics, please suggest them to the email listed in the interest form. Thanks! - David
+If you did not complete the original interest form, and would like to be added to our mailing list, please complete the form [here](https://docs.google.com/forms/d/e/1FAIpQLScPK4V_WNSgQvZNq7aIHpoiX8pi3kiuCfI0Tp7hQkVJS3HPtQ/viewform?usp=publish-editor)
+
+The pre-course learning materials are now [available](/course/00_GitHub/index.qmd) via the Course tab. They consist of walkthroughs of how to set up your workstations with the required software, and exercises to help you become more familiar with the various teaching and coding resources we will be using throughout the course. 
 
 <br>
-<br>
+
 
 ### Workstation Setup
 
 ![](images/PopUpLab.jpeg){width=25%}
 
-[**Week 1:**]{.underline} During this first session, we will ensure that everyone's computer gets properly setup, as well as start building individual participants familiarity with the software infrastructure that they will be using throughout the rest of the course. Namely, you will need to install [R](https://cran.rstudio.com/), [Rtools](https://cran.r-project.org/bin/windows/Rtools/), [Positron](https://positron.posit.co/), [Quarto](https://quarto.org/), and [Git](https://git-scm.com/); as well as setup and link to a [GitHub](https://github.com/) account. This session also touches on concepts behind version control and how to install R package from the various repositories ([CRAN](https://cran.r-project.org/), [Bioconductor](https://www.bioconductor.org/), [GitHub](https://github.com/r-lib/remotes)).
+[**Week 1: February 2, 2026**]{.underline} During this first session, we will ensure that everyone's computer gets properly setup, as well as start building individual participants familiarity with the software infrastructure that they will be using throughout the rest of the course. Namely, you will need to install [R](https://cran.rstudio.com/), [Rtools](https://cran.r-project.org/bin/windows/Rtools/), [Positron](https://positron.posit.co/), [Quarto](https://quarto.org/), and [Git](https://git-scm.com/); as well as setup and link to a [GitHub](https://github.com/) account. This session also touches on concepts behind version control and how to install R package from the various repositories ([CRAN](https://cran.r-project.org/), [Bioconductor](https://www.bioconductor.org/), [GitHub](https://github.com/r-lib/remotes)).
 
 <br>
 <br>
@@ -30,7 +37,7 @@ Please complete the [interest form](https://docs.google.com/forms/d/e/1FAIpQLScP
 
 ![](https://www.medschool.umaryland.edu/media/som/offices-of-the-dean/information-services/screenshots/mappedrives02.png){width=50%}
 
-[**Week 2:**]{.underline} For this session, we focus on how to programmatically tell your computer where to locate your experimental files, introducing the concept of [file paths](https://ytakemon.github.io/2019-10-22-R-BCCRC/02-filedir/). We explore how the various operating systems (Linux, MacOS, Windows) specify their respective folders and files, and how to identify where you are currently within the directory. Our goal by the end of this session is to have walked you through how to figure out where an .fcs file of interest is stored, and convey to your computer where you want it copied/moved to, without encountering the common pitfalls. 
+[**Week 2: February 9, 2026**]{.underline} For this session, we focus on how to programmatically tell your computer where to locate your experimental files, introducing the concept of [file paths](https://ytakemon.github.io/2019-10-22-R-BCCRC/02-filedir/). We explore how the various operating systems (Linux, MacOS, Windows) specify their respective folders and files, and how to identify where you are currently within the directory. Our goal by the end of this session is to have walked you through how to figure out where an .fcs file of interest is stored, and convey to your computer where you want it copied/moved to, without encountering the common pitfalls. 
 
 <br>
 <br>
@@ -39,7 +46,7 @@ Please complete the [interest form](https://docs.google.com/forms/d/e/1FAIpQLScP
 
 ![](https://www.researchgate.net/profile/John-Drakos/publication/5575630/figure/fig1/AS:202978347753476@1425405217571/The-structure-of-FCS-files-The-HEADER-is-a-fixed-size-58-bytes-ASCII-encoded-segment.png){width=50%}
 
-[**Week 3:**]{.underline} In the course of this session we will slice into an .FCS file and find out what the individual components that make it up are. In the process, we will cover the concepts of main [data structures](http://adv-r.had.co.nz/Data-structures.html) within R (vectors, matrices, data.frames, list) and how to identify what we are working with. Additionally, we will explore how various cytometry softwares store their metadata variables under various keywords that can be useful to know about. 
+[**Week 3: February 16, 2026**]{.underline} In the course of this session we will slice into an .FCS file and find out what the individual components that make it up are. In the process, we will cover the concepts of main [data structures](http://adv-r.had.co.nz/Data-structures.html) within R (vectors, matrices, data.frames, list) and how to identify what we are working with. Additionally, we will explore how various cytometry softwares store their metadata variables under various keywords that can be useful to know about. 
 
 <br>
 <br>
@@ -48,7 +55,7 @@ Please complete the [interest form](https://docs.google.com/forms/d/e/1FAIpQLScP
 
 ![](images/histograms.png){width=75%}
 
-[**Week 4:**]{.underline} Within this session, we explore how the various [tidyverse](https://tidyverse.org/) packages can be utilized to reorganize rows and columns of data in ways that are useful for data analysis. We will primarily work with the MFI expression data we isolated from within the .fcs file in the previous session, identifying and isolating events that meet certain criterias. We introduce the concepts behind ["tidy"](https://vita.had.co.nz/papers/tidy-data.pdf) data and how it can improve our workflows. 
+[**Week 4: February 23, 2026**]{.underline} Within this session, we explore how the various [tidyverse](https://tidyverse.org/) packages can be utilized to reorganize rows and columns of data in ways that are useful for data analysis. We will primarily work with the MFI expression data we isolated from within the .fcs file in the previous session, identifying and isolating events that meet certain criterias. We introduce the concepts behind ["tidy"](https://vita.had.co.nz/papers/tidy-data.pdf) data and how it can improve our workflows. 
 
 <br>
 <br>
@@ -288,3 +295,15 @@ Please complete the [interest form](https://docs.google.com/forms/d/e/1FAIpQLScP
 
 <br>
 <br>
+
+<div style="text-align: right;">
+[![AGPL-3.0][agpl3-image]][agpl3]
+[![CC BY-SA 4.0][cc-by-sa-image]][cc-by-sa]
+</div>
+
+[cc-by-sa]: http://creativecommons.org/licenses/by-sa/4.0/
+[cc-by-sa-image]: https://licensebuttons.net/l/by-sa/4.0/88x31.png
+[cc-by-sa-shield]: https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg
+[agpl3]: https://www.gnu.org/licenses/agpl-3.0.en.html
+[agpl3-image]: https://www.gnu.org/graphics/agplv3-with-text-162x68.png
+[agpl3-shield]: https://img.shields.io/badge/license-AGPLv3-blue

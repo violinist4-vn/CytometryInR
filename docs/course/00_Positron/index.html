@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="David Rach">
+<meta name="dcterms.date" content="2026-01-21">
+
+<title>Using Positron – Cytometry in R</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../course/00_Git/index.html" rel="next">
+<link href="../../course/00_WorkstationSetup/index.html" rel="prev">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-8eaec6b9941db0f18eecf13b95a46332.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-LZ35J3XE4D"></script>
+
+<script type="text/javascript">
+
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-LZ35J3XE4D', { 'anonymize_ip': true});
+</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-sidebar floating nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a href="../../index.html" class="navbar-brand navbar-brand-logo">
+    <img src="../../images/hex.svg" alt="" class="navbar-logo">
+    </a>
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Cytometry in R</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../Schedule.html"> 
+<span class="menu-text">Schedule</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../course/index.html"> 
+<span class="menu-text">Course</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/UMGCCCFCSR/CytometryInR"> <i class="bi bi-github" role="img" aria-label="GitHub">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../course/00_GitHub/index.html">Getting Started</a></li><li class="breadcrumb-item"><a href="../../course/00_Positron/index.html">00 - Positron</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+  <div id="quarto-announcement" data-announcement-id="1b0d00193ccb239f289fa2c2a7d8c198" class="alert alert-info hidden"><i class="bi bi-info-circle quarto-announcement-icon"></i><div class="quarto-announcement-content">
+<p>Course will start week of February 1st. Workstation setup tutorials are now available.</p>
+</div><i class="bi bi-x-lg quarto-announcement-action"></i></div>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Getting Started</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../course/00_GitHub/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">00 - GitHub</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../course/00_WorkstationSetup/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">00 - Workstation Setup</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../course/00_Positron/index.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">00 - Positron</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../course/00_Git/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">00 - Git</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../course/00_Quarto/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">00 - Quarto</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../course/00_Homeworks/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">00 - Getting Help</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../course/00_Floreada/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">00 - Floreada</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <span class="sidebar-item-text sidebar-link text-start">
+ <span class="menu-text">Intro to R</span></span>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <span class="sidebar-item-text sidebar-link text-start">
+ <span class="menu-text">Cytometry Core</span></span>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <span class="sidebar-item-text sidebar-link text-start">
+ <span class="menu-text">Beyond the Sandbox</span></span>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <span class="sidebar-item-text sidebar-link text-start">
+ <span class="menu-text">The World is your Oyster</span></span>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#background" id="toc-background" class="nav-link active" data-scroll-target="#background">Background</a></li>
+  <li><a href="#getting-started" id="toc-getting-started" class="nav-link" data-scroll-target="#getting-started">Getting Started</a></li>
+  <li><a href="#interpreter" id="toc-interpreter" class="nav-link" data-scroll-target="#interpreter">Interpreter</a></li>
+  <li><a href="#folders" id="toc-folders" class="nav-link" data-scroll-target="#folders">Folders</a></li>
+  <li><a href="#panel" id="toc-panel" class="nav-link" data-scroll-target="#panel">Panel</a>
+  <ul>
+  <li><a href="#console" id="toc-console" class="nav-link" data-scroll-target="#console">Console</a></li>
+  <li><a href="#terminal" id="toc-terminal" class="nav-link" data-scroll-target="#terminal">Terminal</a></li>
+  </ul></li>
+  <li><a href="#editor" id="toc-editor" class="nav-link" data-scroll-target="#editor">Editor</a>
+  <ul>
+  <li><a href="#help" id="toc-help" class="nav-link" data-scroll-target="#help">Help</a></li>
+  </ul></li>
+  <li><a href="#primary-side-bar" id="toc-primary-side-bar" class="nav-link" data-scroll-target="#primary-side-bar">Primary Side Bar</a></li>
+  <li><a href="#secondary-side-bar" id="toc-secondary-side-bar" class="nav-link" data-scroll-target="#secondary-side-bar">Secondary Side Bar</a>
+  <ul>
+  <li><a href="#variables" id="toc-variables" class="nav-link" data-scroll-target="#variables">Variables</a></li>
+  <li><a href="#plots" id="toc-plots" class="nav-link" data-scroll-target="#plots">Plots</a></li>
+  <li><a href="#view" id="toc-view" class="nav-link" data-scroll-target="#view">View</a></li>
+  </ul></li>
+  <li><a href="#activity-bar" id="toc-activity-bar" class="nav-link" data-scroll-target="#activity-bar">Activity Bar</a>
+  <ul>
+  <li><a href="#pages" id="toc-pages" class="nav-link" data-scroll-target="#pages">Pages</a></li>
+  <li><a href="#search" id="toc-search" class="nav-link" data-scroll-target="#search">Search</a></li>
+  <li><a href="#extensions" id="toc-extensions" class="nav-link" data-scroll-target="#extensions">Extensions</a></li>
+  <li><a href="#git" id="toc-git" class="nav-link" data-scroll-target="#git">Git</a></li>
+  </ul></li>
+  <li><a href="#wrap-up" id="toc-wrap-up" class="nav-link" data-scroll-target="#wrap-up">Wrap-up</a></li>
+  <li><a href="#additional-resources" id="toc-additional-resources" class="nav-link" data-scroll-target="#additional-resources">Additional Resources</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../course/00_GitHub/index.html">Getting Started</a></li><li class="breadcrumb-item"><a href="../../course/00_Positron/index.html">00 - Positron</a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title">Using Positron</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>David Rach </p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">January 21, 2026</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><img src="../../images/WebsiteBanner.png" class="img-fluid"></p>
+<div style="text-align: right;">
+<p><a href="https://www.gnu.org/licenses/agpl-3.0.en.html"><img src="https://img.shields.io/badge/license-AGPLv3-blue.png" class="img-fluid" alt="AGPL-3.0"></a> <a href="http://creativecommons.org/licenses/by-sa/4.0/"><img src="https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg" class="img-fluid" alt="CC BY-SA 4.0"></a></p>
+</div>
+<p>For screen-shot slides, click <a href="../../course/00_Positron/slides.html">here</a></p>
+<p>For the YouTube narration, click <a href="https://www.youtube.com/@CytometryInR">here</a></p>
+<section id="background" class="level1">
+<h1>Background</h1>
+<p>In this course, we are creating and working with code from the programming language <a href="https://www.r-project.org/">R</a>. However, in practice, we are not running the code directly using just the base R software. Typically, we are running an integrated development environment (IDE), which is an additional software running on top of base R.</p>
+<p>An IDE has the responsibility to help organize and manage the projects folders, pass along lines of code being executed (run) to the underlying R software, and then return and visualize the outputs in a manner that leads to increased producitivity. Examples of IDEs include <a href="https://positron.posit.co/">Positron</a>, <a href="https://code.visualstudio.com/">Visual Studio Code</a> and <a href="https://posit.co/downloads/">Rstudio</a>.</p>
+<p>For this course, we will be using <a href="https://positron.posit.co/">Positron</a> as our primary IDE. For those of you who have previous R experience, you are likely more familiar with <a href="https://posit.co/downloads/">Rstudio</a> which is also made by Posit, and is the older of the two IDEs. Why use Positron for this course then?</p>
+<p>There are several reasons. First, Positron combines the best elements of both Rstudio (which preceeded it) and VS code (from which it’s base infrastructure was <a href="https://posit.co/blog/positron-product-announcement-aug-2025/">forked</a>). In a course aimed at coding beginners, this combination is immensely helpful in bringing important elements that had been previously hidden behind several menus in Rstudio out into the open where they are immediately available, reducing complicated workarounds. In my recent experience, it has been easier to teach beginners to code well with Positron than it was previously with Rstudio.</p>
+<p>Second, Data Science (and Bioinformatics) is increasingly moving in a multi-lingual programming direction. Flow Cytometry is not immune to this trend, <a href="https://www.python.org/">Python</a>, <a href="https://julialang.org/">Julia</a> and <a href="https://rust-lang.org/">Rust</a> are appearing more in <a href="https://www.cytoconference.org/index.html">Cyto posters</a> each year. Positron is built to handle this, allowing us to bring in and use cool packages regardless of what language they are written, avoiding additional complicated workarounds to get them to work in Rstudio.</p>
+<p>And finally, having placed so much effort into making these resources available to the wider community, I don’t want to provide all my examples using Rstudio only to find out two years from now that maintenance has been discontinued by Posit and everything needs to be remade.</p>
+<p>Consequently, I decided to use Positron for the course. This walk-through will cover some of the main layout elements to help start build some initial familiarity with the IDE, which we will continue to build on throughout the course.</p>
+</section>
+<section id="getting-started" class="level1">
+<h1>Getting Started</h1>
+<p>When opening Positron for the first time, you will see something like this. Let’s work our way around the screen, covering the major items in turn.</p>
+<p><img src="images/01_PositronOpen.png" class="img-fluid"></p>
+<p><br></p>
+<hr>
+</section>
+<section id="interpreter" class="level1">
+<h1>Interpreter</h1>
+<p>On the upper right, above Session/Variables tab, you have the option to select the coding language (interpreter) being used by the project folder. For most of this course, you will likely see this set to R 4.5.2 (or your current R version). If your computer has Python installed, you may also see these versions appear within the interpreter drop-down menu.</p>
+<p><img src="images/30_Session.png" class="img-fluid"></p>
+<p><br></p>
+<hr>
+</section>
+<section id="folders" class="level1">
+<h1>Folders</h1>
+<p>As <a href="../../course/00_WorkstationSetup/index.html">briefly covered</a> at the end of WorkStation walkthrough, the folders button to the right of the interpretor button allows us to open and work with Project Folders. From the drop-down, we can also Create New Folder from a template (which we will cover in the next section), or bring them in from existing GitHub repositories (as we did last section). You will also find the option to open other project folders that have been opened recently.</p>
+<p><img src="images/31_ProjectFolderAccess.png" class="img-fluid"></p>
+<p><br></p>
+<hr>
+</section>
+<section id="panel" class="level1">
+<h1>Panel</h1>
+<p>At the bottom-center of the screen you will find the Panel region. This contains several tabs (Console, Terminal, etc).</p>
+<p><img src="https://positron.posit.co/images/user-interface-for-rstudio-migration.jpeg" class="img-fluid"></p>
+<section id="console" class="level2">
+<h2 class="anchored" data-anchor-id="console">Console</h2>
+<p>At the bottom of the sceen, you will first see the Console Tab. This is the tab where your lines of code when executed (run) will appear, as well as any messages, warnings or errors that get returned. On the right side of the console, you can find several buttons, among them restart R and delete session (for when you need a fresh start), and clear console (which keeps all previously run outputs and objects, but clears away the displayed text within the console).</p>
+<p><img src="images/02_Console.png" class="img-fluid"></p>
+<p><br></p>
+<hr>
+</section>
+<section id="terminal" class="level2">
+<h2 class="anchored" data-anchor-id="terminal">Terminal</h2>
+<p>Right next to the Console tab is your Terminal tab. While the console tab is primarily used to run R code within Positron, the terminal is the interface where code containing system commands directed at at your computer is entered. We will use this less frequently, primarily in two context: 1) rendering Quarto documents, and 2) commiting changes to version control. Among the buttons on the right-side of the terminal to make note of are the + button to add a new terminal, and the trash/garbage can button to kill (stop) the terminal.</p>
+<p><img src="images/03_Terminal.png" class="img-fluid"></p>
+<p><br></p>
+<hr>
+<p>The other tabs (Problems, Output, Ports, Debug Console) are used less frequently. I usually will Problems and Debug when something goes wrong with the code, as various warning and error messages will end up being displayed there.</p>
+<p><img src="images/03_Terminal.png" class="img-fluid"></p>
+<p><br></p>
+<hr>
+</section>
+</section>
+<section id="editor" class="level1">
+<h1>Editor</h1>
+<p><img src="https://positron.posit.co/images/user-interface-for-rstudio-migration.jpeg" class="img-fluid"></p>
+<p>Located above the panel section (ie, just above the console window) is the main area known as the Editor. It is typically where you end up writing your code. It displays any and all the files that you open.</p>
+<p>For example, when I open a .png for one of my projects, the image will appear within the editor area in the middle of my screen.</p>
+<p><img src="images/04_VisualizedPNG.png" class="img-fluid"></p>
+<p><br></p>
+<hr>
+<p>When the file I open is an .R script, I will be able to see and edit the code contained within that same area.</p>
+<p><img src="images/05_R.png" class="img-fluid"></p>
+<p><br></p>
+<hr>
+<p>Should I open a Quarto markdown file (.qmd), I can see and edit both the written as well as the code chunks contained within.</p>
+<p><img src="images/06_QMD.png" class="img-fluid"></p>
+<p><br></p>
+<hr>
+<p>Looking below the tabs of the opened files, I can see the file.path (location) for the file I currently have open and am working on. This is denoted by the &gt; &gt; &gt; interspersed with the parent folder names.</p>
+<p><img src="images/07_FilePath.png" class="img-fluid"></p>
+<p><br></p>
+<hr>
+<p>Just above the file path, and below the tabs, we find a couple buttons. Preview is used to render a Quarto document into various types of documents (including .html, .pdf or .docx) as long as no errors are encountered.</p>
+<p><img src="images/08_Preview.png" class="img-fluid"></p>
+<p><br></p>
+<hr>
+<p>Source tab will normally be the active view, which will show everything as code/<a href="https://www.markdownguide.org/getting-started/">markdown</a></p>
+<p><img src="images/09_Source.png" class="img-fluid"></p>
+<p><br></p>
+<hr>
+<p>However, when we switch to Visual mode, it will visualize in a similar manner as if we had rendered the document as an .html webpage.</p>
+<p><img src="images/10_Visual.png" class="img-fluid"></p>
+<p><br></p>
+<hr>
+<p>As more files are opened, they will appear as individual tabs. These can be opened and closed as need be. The color of the text also displays their saved status.</p>
+<p><img src="images/11_NavigatingBetween.png" class="img-fluid"></p>
+<p><br></p>
+<hr>
+<section id="help" class="level2">
+<h2 class="anchored" data-anchor-id="help">Help</h2>
+<p>When trying to evaluate how a particular function is working in R, you can hover over it and positron will open up the documentation for that particular function if available, alternatively, you can enter ?theParticularFunctionsName in the console and hit enter to similarly view what is occuring.</p>
+<p><img src="images/Help.png" class="img-fluid"></p>
+</section>
+</section>
+<section id="primary-side-bar" class="level1">
+<h1>Primary Side Bar</h1>
+<p><img src="https://positron.posit.co/images/user-interface-for-rstudio-migration.jpeg" class="img-fluid"></p>
+<p>To open a file, several options exist. If they are present within your Project folder, you can click on the pages tab on the activity bar (far upper left) and then click on the file of interest shown within the primary side bar (between the activity bar and the editor). Alternatively, the Open Folder icon on the upper-left or entering “Ctrl + O”/“Command + O” will open a pop-up to allow you to navigate and select a folder elsewhere on your computer.</p>
+<p><img src="images/OpenFile.png" class="img-fluid"></p>
+<p><br></p>
+<hr>
+<p>Unsaved changes to an open file are reflected by on the tab the change in color of the text, and the appearance of a dot. We can click the Save changes button to change this.</p>
+<p><img src="images/SaveChanges.png" class="img-fluid"></p>
+<p><br></p>
+<hr>
+</section>
+<section id="secondary-side-bar" class="level1">
+<h1>Secondary Side Bar</h1>
+<p><img src="https://positron.posit.co/images/user-interface-for-rstudio-migration.jpeg" class="img-fluid"></p>
+<p>The secondary side bar is found on the right-side of the screen, to the right of the Editor and Panel windows. It is divided between an upper, and a lower portion.</p>
+<section id="variables" class="level2">
+<h2 class="anchored" data-anchor-id="variables">Variables</h2>
+<p>On the upper-portion of the Secondary Side Bar, we can find the Session window, containing the Variables tab. As you run (execute) lines of code, and different variables, objects and functions are created, these become visible under the variables tab on the upper right.</p>
+<p><img src="images/SessionVariables.png" class="img-fluid"></p>
+<p><br></p>
+<hr>
+<p>For some types of objects (generally data.frames and other matrix-like objects), you can click on their listing under variables to expand to see additional details about the object (column names, etc.) as well as view a larger version which will appear within the Editor window.</p>
+</section>
+<section id="plots" class="level2">
+<h2 class="anchored" data-anchor-id="plots">Plots</h2>
+<p>Similarly, any generated Plots or Documents will appear within the Secondary Side Bar, either under Plots (bottom) or Viewer (top) tabs.</p>
+<p><img src="images/SessionPlots.png" class="img-fluid"></p>
+<p><br></p>
+<hr>
+</section>
+<section id="view" class="level2">
+<h2 class="anchored" data-anchor-id="view">View</h2>
+<p>On the upper bar multiple tabs can be found, which we will explore in due time. Most useful to point out is the View tab. If you accidentally close your console, session or plots window, and are trying to get them to reapper, you would need to reselect them from this tab.</p>
+<p><img src="images/28_View.png" class="img-fluid"></p>
+<p><br></p>
+<hr>
+</section>
+</section>
+<section id="activity-bar" class="level1">
+<h1>Activity Bar</h1>
+<p><img src="https://positron.posit.co/images/user-interface-for-rstudio-migration.jpeg" class="img-fluid"></p>
+<p>At the far-left side of the screen, you will find the activity bar, which contains several tabs. Depending on which one you have opened, the contents will be displayed on the primary side bar next to it.</p>
+<section id="pages" class="level2">
+<h2 class="anchored" data-anchor-id="pages">Pages</h2>
+<p>The pages tab and the left-side bar show you everything that is currently within your project folder, including all the folders, and files. Once version control with Git is initiated, new files are relected showing up as green text and a dot, while modified tracked files are reflected by light brown text and a dot.</p>
+<p><img src="images/27_ChangesSinceLastCommit.png" class="img-fluid"></p>
+<p><br></p>
+<hr>
+<p>The dropdown arrows can be used to open and close specific folders to allow for better organization. There is also a scrollbar on the right-side of the side-bar to scroll through the entire folders contents.</p>
+<p><img src="images/26_MainTab.png" class="img-fluid"></p>
+<p><br></p>
+<hr>
+</section>
+<section id="search" class="level2">
+<h2 class="anchored" data-anchor-id="search">Search</h2>
+<p>The search tab on the left side bar is something that I use routinely.</p>
+<p><img src="images/24_SearchTab.png" class="img-fluid"></p>
+<p><br></p>
+<hr>
+<p>It can help locate code that you had been working on, but have since forgotten where it is at. Here is an example of finding the files where I had used a function that needed modifying within a local project folder’s files.</p>
+<p><img src="images/25_SearchResults.png" class="img-fluid"></p>
+<p><br></p>
+<hr>
+<p>Similarly, if you need to replace a particular character string with another, the replace with field below can help simplify the task without having to track down and change 20 lines across 5 files.</p>
+<p><img src="images/24_SearchTab.png" class="img-fluid"></p>
+<p><br></p>
+<hr>
+</section>
+<section id="extensions" class="level2">
+<h2 class="anchored" data-anchor-id="extensions">Extensions</h2>
+<p>On the far-left side we can find the Activity bar, which contains several tabs. Which tab you have selected will then dictate the contents of your left side-bar.</p>
+<p>Occupying the left side bar are several tabs. One of these is Extensions, which shows “Plugins” (or the VScode equivalent) that extend the functionality of Positron further. The ones you have installed may vary, but the main ones in context of this course are Air (provides color and highlights syntax for R code to make interpretation easier) as well as Quarto (for rendering the various document types).</p>
+<p><img src="images/29_ExtensionsTab.png" class="img-fluid"></p>
+<p><br></p>
+<hr>
+</section>
+<section id="git" class="level2">
+<h2 class="anchored" data-anchor-id="git">Git</h2>
+<p>The Git tab on the left side bar is where once version control is initiated for the project folder, we can see changes that have occurred to the individual files since the last commit. These changes can be added to a new commit by clicking on the + sign. This will be covered more extensively in the <a href="../../course/00_Git/index.html">next section</a></p>
+<p><img src="images/20_SaveChanges.png" class="img-fluid"></p>
+<p><br></p>
+<hr>
+<p>Similarly, if you want to discard a change that has occured, the circular arrow will revert to the last commited version. Selecting and pressing the delete button will similarly work.</p>
+<p><img src="images/21_DiscardChanges.png" class="img-fluid"></p>
+<p><br></p>
+<hr>
+<p>Selecting the … options will highlight all the various git functions, some of which we will cover more extensively in the <a href="../../course/00_Git/index.html">next section</a> and throughout the course.</p>
+<p><img src="images/23_AdditionalGitOptions.png" class="img-fluid"></p>
+<p><br></p>
+<hr>
+</section>
+</section>
+<section id="wrap-up" class="level1">
+<h1>Wrap-up</h1>
+<p>In this walk-through, we looked at some of the elements within Positron. Don’t worry, you don’t need to remember them all or what they do at this point of time, these will come with practice over the first few weeks of the course.</p>
+<p>In the <a href="../../course/00_Git/index.html">next section</a>, we will take a closer look at using the version control software Git that we have previewed here.</p>
+</section>
+<section id="additional-resources" class="level1">
+<h1>Additional Resources</h1>
+<p><a href="https://posit.co/blog/a-quick-tour-of-positron/">A brief tour of Positron</a></p>
+<p><a href="https://youtu.be/4Ir_HX4riHw?si=awSUVjdzBPDVR4Iw">A brief tour of Positron (YouTube)</a></p>
+<p><a href="https://positron.posit.co/welcome.html">Welcome to Positron</a></p>
+<div style="text-align: right;">
+<p><a href="https://www.gnu.org/licenses/agpl-3.0.en.html"><img src="https://www.gnu.org/graphics/agplv3-with-text-162x68.png" class="img-fluid" alt="AGPL-3.0"></a> <a href="http://creativecommons.org/licenses/by-sa/4.0/"><img src="https://licensebuttons.net/l/by-sa/4.0/88x31.png" class="img-fluid" alt="CC BY-SA 4.0"></a></p>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="../../course/00_WorkstationSetup/index.html" class="pagination-link" aria-label="00 - Workstation Setup">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">00 - Workstation Setup</span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="../../course/00_Git/index.html" class="pagination-link" aria-label="00 - Git">
+        <span class="nav-page-text">00 - Git</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>Made with <a href="https://quarto.org/">Quarto</a></p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+<p><img src="../../images/AGPL3.png" class="img-fluid" alt="AGPL-3.0"> <img src="../../images/CCBYSA.png" class="img-fluid" alt="CC-BY-SA"></p>
+</div>
+  </div>
+</footer>
+
+
+
+
+</body></html>
